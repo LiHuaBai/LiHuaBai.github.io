@@ -1,0 +1,451 @@
+<!DOCTYPE html>
+<html>
+<head><meta name="generator" content="Hexo 3.8.0">
+    
+
+    
+
+    
+
+
+
+    <meta charset="utf-8">
+    
+    
+    
+    
+    <title>基于LSTM的问答匹配实践 | Vince&#39;s Blog | You see the world, the world see you</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+    
+    <meta name="theme-color" content="#3F51B5">
+    
+    
+    <meta name="keywords" content>
+    <meta name="description" content="之前的博客里，都写了一些tensorflow的入门学习，当时在学习tensorflow时一个让我很头疼的问题就是，只要自己写大点深点的网络，基本都是跑不动，损失函数降了一阵就不动了，估计可能是初始化，正则防止过拟合没做好。这个LSTM网络算是我难得写出来能跑的网络，现在有空了来记录一下。 LSTM网络LSTM网络是由RNN变化而来，当时一直很困惑的问题就是关于RNN，横的算一层还是竖的算一层，应该">
+<meta property="og:type" content="article">
+<meta property="og:title" content="基于LSTM的问答匹配实践">
+<meta property="og:url" content="http://yoursite.com/2019/03/21/LSTM_QA_match/index.html">
+<meta property="og:site_name" content="Vince&#39;s Blog">
+<meta property="og:description" content="之前的博客里，都写了一些tensorflow的入门学习，当时在学习tensorflow时一个让我很头疼的问题就是，只要自己写大点深点的网络，基本都是跑不动，损失函数降了一阵就不动了，估计可能是初始化，正则防止过拟合没做好。这个LSTM网络算是我难得写出来能跑的网络，现在有空了来记录一下。 LSTM网络LSTM网络是由RNN变化而来，当时一直很困惑的问题就是关于RNN，横的算一层还是竖的算一层，应该">
+<meta property="og:locale" content="zh-CN">
+<meta property="og:updated_time" content="2019-03-21T13:19:24.123Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="基于LSTM的问答匹配实践">
+<meta name="twitter:description" content="之前的博客里，都写了一些tensorflow的入门学习，当时在学习tensorflow时一个让我很头疼的问题就是，只要自己写大点深点的网络，基本都是跑不动，损失函数降了一阵就不动了，估计可能是初始化，正则防止过拟合没做好。这个LSTM网络算是我难得写出来能跑的网络，现在有空了来记录一下。 LSTM网络LSTM网络是由RNN变化而来，当时一直很困惑的问题就是关于RNN，横的算一层还是竖的算一层，应该">
+    
+        <link rel="alternate" type="application/atom+xml" title="Vince&#39;s Blog" href="/atom.xml">
+    
+    <link rel="shortcut icon" href="/favicon.ico">
+    <link rel="stylesheet" href="/css/style.css?v=1.7.2">
+    <script>window.lazyScripts=[]</script>
+
+    <!-- custom head -->
+    
+
+</head>
+
+<body>
+    <div id="loading" class="active"></div>
+
+    <aside id="menu" class="hide">
+  <div class="inner flex-row-vertical">
+    <a href="javascript:;" class="header-icon waves-effect waves-circle waves-light" id="menu-off">
+        <i class="icon icon-lg icon-close"></i>
+    </a>
+    <div class="brand-wrap" style="background-image:url(/img/drawerCover0.jpg)">
+      <div class="brand">
+        <a href="/" class="avatar waves-effect waves-circle waves-light">
+          <img src="/img/cover0.png">
+        </a>
+        <hgroup class="introduce">
+          <h5 class="nickname">毛靖文</h5>
+          <a href="mailto:785512526@qq.com" title="785512526@qq.com" class="mail">785512526@qq.com</a>
+        </hgroup>
+      </div>
+    </div>
+    <div class="scroll-wrap flex-col">
+      <ul class="nav">
+        
+            <li class="waves-block waves-effect">
+              <a href="/">
+                <i class="icon icon-lg icon-home"></i>
+                Home
+              </a>
+            </li>
+        
+            <li class="waves-block waves-effect">
+              <a href="/archives">
+                <i class="icon icon-lg icon-archives"></i>
+                Archives
+              </a>
+            </li>
+        
+            <li class="waves-block waves-effect">
+              <a href="/categories">
+                <i class="icon icon-lg icon-th-list"></i>
+                Categories
+              </a>
+            </li>
+        
+            <li class="waves-block waves-effect">
+              <a href="https://github.com/LiHuaBai" target="_blank">
+                <i class="icon icon-lg icon-github"></i>
+                Github
+              </a>
+            </li>
+        
+      </ul>
+    </div>
+  </div>
+</aside>
+
+    <main id="main">
+        <header class="top-header" id="header">
+    <div class="flex-row">
+        <a href="javascript:;" class="header-icon waves-effect waves-circle waves-light on" id="menu-toggle">
+          <i class="icon icon-lg icon-navicon"></i>
+        </a>
+        <div class="flex-col header-title ellipsis">基于LSTM的问答匹配实践</div>
+        
+        <div class="search-wrap" id="search-wrap">
+            <a href="javascript:;" class="header-icon waves-effect waves-circle waves-light" id="back">
+                <i class="icon icon-lg icon-chevron-left"></i>
+            </a>
+            <input type="text" id="key" class="search-input" autocomplete="off" placeholder="输入感兴趣的关键字">
+            <a href="javascript:;" class="header-icon waves-effect waves-circle waves-light" id="search">
+                <i class="icon icon-lg icon-search"></i>
+            </a>
+        </div>
+        
+        
+        <a href="javascript:;" class="header-icon waves-effect waves-circle waves-light" id="menuShare">
+            <i class="icon icon-lg icon-share-alt"></i>
+        </a>
+        
+    </div>
+</header>
+<header class="content-header post-header">
+
+    <div class="container fade-scale" style="padding:0 16px">
+        <h1 class="title" style="padding-top: 12px; padding-left: 300px; font-size:50px;">基于LSTM的问答匹配实践</h1>
+        <h5 class="subtitle" style="font-size: 24px;padding-left: 260px; padding-top: 8px; font-weight: 400; color: #a56f6f;">
+            
+                <time datetime="2019-03-21T12:39:24.657Z" itemprop="datePublished" class="page-time">
+  2019-03-21
+</time>
+
+
+	<ul class="article-category-list"><li class="article-category-list-item"><a class="article-category-list-link" href="/categories/DeepLearning/">DeepLearning</a><ul class="article-category-list-child"><li class="article-category-list-item"><a class="article-category-list-link" href="/categories/DeepLearning/tensorflow/">tensorflow</a></li></ul></li></ul>
+
+            
+        </h5>
+    </div>
+
+    
+
+
+</header>
+
+
+<div class="container body-wrap" style="width: 1160px;">
+    
+    <aside class="post-widget">
+        <nav class="post-toc-wrap post-toc-shrink" id="post-toc">
+            <h4>TOC</h4>
+            <ol class="post-toc"><li class="post-toc-item post-toc-level-2"><a class="post-toc-link" href="#LSTM网络"><span class="post-toc-number">1.</span> <span class="post-toc-text">LSTM网络</span></a></li><li class="post-toc-item post-toc-level-2"><a class="post-toc-link" href="#LSTM网络代码"><span class="post-toc-number">2.</span> <span class="post-toc-text">LSTM网络代码</span></a></li></ol>
+        </nav>
+    </aside>
+
+
+<article id="post-LSTM_QA_match" class="post-article article-type-post fade" itemprop="blogPost">
+
+    <div class="post-card">
+        <h1 class="post-card-title">基于LSTM的问答匹配实践</h1>
+        <div class="post-meta">
+            <time class="post-time" title="2019-03-21 20:39:24" datetime="2019-03-21T12:39:24.657Z" itemprop="datePublished">2019-03-21</time>
+
+            
+	<ul class="article-category-list"><li class="article-category-list-item"><a class="article-category-list-link" href="/categories/DeepLearning/">DeepLearning</a><ul class="article-category-list-child"><li class="article-category-list-item"><a class="article-category-list-link" href="/categories/DeepLearning/tensorflow/">tensorflow</a></li></ul></li></ul>
+
+
+
+            
+<span id="busuanzi_container_page_pv" title="文章总阅读量" style="display:none">
+    <i class="icon icon-eye icon-pr"></i><span id="busuanzi_value_page_pv"></span>
+</span>
+
+
+        </div>
+        <div class="post-content" id="post-content" itemprop="postContent">
+            <p>之前的博客里，都写了一些tensorflow的入门学习，当时在学习tensorflow时一个让我很头疼的问题就是，只要自己写大点深点的网络，基本都是跑不动，损失函数降了一阵就不动了，估计可能是初始化，正则防止过拟合没做好。这个LSTM网络算是我难得写出来能跑的网络，现在有空了来记录一下。</p>
+<h2 id="LSTM网络"><a href="#LSTM网络" class="headerlink" title="LSTM网络"></a>LSTM网络</h2><p>LSTM网络是由RNN变化而来，当时一直很困惑的问题就是关于RNN，横的算一层还是竖的算一层，应该是横的算一层，因此最简单的RNN即是一层隐藏层，光看RNN模型图的话，总会有些误解，实际上RNN每个单元的输入对应的状态隐藏层是可以有多个输出的，因为一个单元的输入维度也是n维，对应隐藏层的输出若是m维，则但看这个单元可理解为n到m的全连接网络。这个隐藏层维度一般就是由自己设定。</p>
+<p>同时关于RNN和LSTM的输出，一般在理解模型时，都是以一个句子为例，只需要最后一个序列单元对应的输出，实际上通过tensorflow和keras框架得到的输出，是包括所有单元的，如RNN的输出<br><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">outputs, last_state = tf.nn.static_rnn(cell, inputs)</span><br></pre></td></tr></table></figure></p>
+<p>理论上可认为outputs[-1]与last_state是相等的</p>
+<p>关于LSTM，由于其状态由两个值构成(Ct,Ht)，认为其状态是一个tuple，其输出为<br><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">outputs, state_out = tf.contrib.rnn.static_rnn(cell, inputs, initial_state=tuple_state)</span><br></pre></td></tr></table></figure></p>
+<p>这样得到的state_out包含两个值，若所写的网络中间有多个隐藏层，则可以有更多状态输出。</p>
+<p>同时对于双向LSTM，其输出outputs的每个单元尺寸为两个LSTM的隐藏层输出单元的和</p>
+<h2 id="LSTM网络代码"><a href="#LSTM网络代码" class="headerlink" title="LSTM网络代码"></a>LSTM网络代码</h2><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line">def biLSTMCell(x, hiddenSize):</span><br><span class="line">    input_x = tf.transpose(x, [1, 0, 2])<span class="comment"># 0 1 2 变成1 0 2，最外面两个维度转置</span></span><br><span class="line">    input_x = tf.unstack(input_x)   <span class="comment">#多维变成低维，默认axio = 0，最外层的维度</span></span><br><span class="line">    lstm_fw_cell = tf.contrib.rnn.BasicLSTMCell(hiddenSize, forget_bias=1.0, state_is_tuple=True)</span><br><span class="line">    lstm_bw_cell = tf.contrib.rnn.BasicLSTMCell(hiddenSize, forget_bias=1.0, state_is_tuple=True)</span><br><span class="line">    output, _, _ = tf.contrib.rnn.static_bidirectional_rnn(lstm_fw_cell, lstm_bw_cell, input_x, dtype=tf.float32)</span><br><span class="line">    output = tf.stack(output)       <span class="comment">#一维变成多维</span></span><br><span class="line">    output = tf.transpose(output, [1, 0, 2])</span><br><span class="line">    <span class="built_in">return</span> output</span><br></pre></td></tr></table></figure>
+<p>需要使用unstack与stack函数变化矩阵维度结构，unstack将一个整体tf变量变成了一个数字list内部的多个tf量，作为输入进入网络输出后，再使用stack函数变回整体tf变量。<br><a href="https://github.com/LiHuaBai/LSTM_for_QA_match" target="_blank" rel="noopener">完整代码</a></p>
+
+        </div>
+
+        <blockquote class="post-copyright">
+    
+    <div class="content">
+        
+<span class="post-time">
+    最后更新时间：<time datetime="2019-03-21T13:19:24.123Z" itemprop="dateUpdated">2019-03-21 21:19:24</time>
+</span><br>
+
+
+        
+    </div>
+    
+    <footer>
+        <a href="http://yoursite.com">
+            <img src="/img/cover0.png" alt="毛靖文">
+            毛靖文
+        </a>
+    </footer>
+</blockquote>
+
+        
+
+
+        <div class="post-footer">
+            
+
+            
+<div class="page-share-wrap">
+    
+
+<div class="page-share" id="pageShare">
+    <ul class="reset share-icons">
+      <li>
+        <a class="weibo share-sns" target="_blank" href="http://service.weibo.com/share/share.php?url=http://yoursite.com/2019/03/21/LSTM_QA_match/&title=《基于LSTM的问答匹配实践》 — Vince's Blog&pic=http://yoursite.com/img/cover0.png" data-title="微博">
+          <i class="icon icon-weibo"></i>
+        </a>
+      </li>
+      <li>
+        <a class="weixin share-sns wxFab" href="javascript:;" data-title="微信">
+          <i class="icon icon-weixin"></i>
+        </a>
+      </li>
+      <li>
+        <a class="qq share-sns" target="_blank" href="http://connect.qq.com/widget/shareqq/index.html?url=http://yoursite.com/2019/03/21/LSTM_QA_match/&title=《基于LSTM的问答匹配实践》 — Vince's Blog&source=" data-title=" QQ">
+          <i class="icon icon-qq"></i>
+        </a>
+      </li>
+      <li>
+        <a class="facebook share-sns" target="_blank" href="https://www.facebook.com/sharer/sharer.php?u=http://yoursite.com/2019/03/21/LSTM_QA_match/" data-title=" Facebook">
+          <i class="icon icon-facebook"></i>
+        </a>
+      </li>
+      <li>
+        <a class="twitter share-sns" target="_blank" href="https://twitter.com/intent/tweet?text=《基于LSTM的问答匹配实践》 — Vince's Blog&url=http://yoursite.com/2019/03/21/LSTM_QA_match/&via=http://yoursite.com" data-title=" Twitter">
+          <i class="icon icon-twitter"></i>
+        </a>
+      </li>
+      <li>
+        <a class="google share-sns" target="_blank" href="https://plus.google.com/share?url=http://yoursite.com/2019/03/21/LSTM_QA_match/" data-title=" Google+">
+          <i class="icon icon-google-plus"></i>
+        </a>
+      </li>
+    </ul>
+ </div>
+
+
+
+    <a href="javascript:;" id="shareFab" class="page-share-fab waves-effect waves-circle">
+        <i class="icon icon-share-alt icon-lg"></i>
+    </a>
+</div>
+
+
+
+        </div>
+    </div>
+
+    
+<nav class="post-nav flex-row flex-justify-between flex-row-reverse">
+  
+
+  
+    <div class="waves-block waves-effect next">
+      <a href="/2019/03/21/Blog_Git_Experience/" id="post-next" class="post-nav-link">
+        <div class="tips">Next <i class="icon icon-angle-right icon-lg icon-pl"></i></div>
+        <h4 class="title">重开博客采坑记录</h4>
+      </a>
+    </div>
+  
+</nav>
+
+
+
+    
+
+
+
+
+
+
+
+
+<section class="comments" id="comments">
+    <div id="gitment_thread"></div>
+    <link rel="stylesheet" href="https://jjeejj.github.io/css/gitment.css">
+    <script src="https://jjeejj.github.io/js/gitment.js"></script>
+    <script>
+        var gitment = new Gitment({
+            owner: 'LiHuaBai',
+            repo: 'LiHuaBai.github.io',
+            oauth: {
+                client_id: 'b23d56ef27956eb7776f',
+                client_secret: 'f31d9fe193744d83b2332c97fce5914607fe0bdf',
+            },
+        })
+        gitment.render('comments')
+    </script>
+</section>
+
+
+
+
+
+
+
+
+
+
+
+
+
+</article>
+
+
+
+</div>
+
+        <footer class="footer">
+    <div class="top">
+        
+<p>
+    <span id="busuanzi_container_site_uv" style="display:none">
+        站点总访客数：<span id="busuanzi_value_site_uv"></span>
+    </span>
+    <span id="busuanzi_container_site_pv" style="display:none">
+        站点总访问量：<span id="busuanzi_value_site_pv"></span>
+    </span>
+</p>
+
+
+        <p>
+            
+                <span><a href="/atom.xml" target="_blank" class="rss" title="rss"><i class="icon icon-lg icon-rss"></i></a></span>
+            
+            <span>博客内容遵循 <a rel="license" href="https://creativecommons.org/licenses/by-nc-sa/4.0/deed.zh">知识共享 署名 - 非商业性 - 相同方式共享 4.0 国际协议</a></span>
+        </p>
+    </div>
+    <div class="bottom">
+        <p><span>毛靖文 &copy; 2015 - 2019</span>
+            <span>
+                
+                Power by <a href="http://hexo.io/" target="_blank">Hexo</a> Theme <a href="https://github.com/yscoder/hexo-theme-indigo" target="_blank">indigo</a>
+            </span>
+        </p>
+    </div>
+</footer>
+
+    </main>
+    <div class="mask" id="mask"></div>
+<a href="javascript:;" id="gotop" class="waves-effect waves-circle waves-light"><span class="icon icon-lg icon-chevron-up"></span></a>
+
+
+
+<div class="global-share" id="globalShare">
+    <ul class="reset share-icons">
+      <li>
+        <a class="weibo share-sns" target="_blank" href="http://service.weibo.com/share/share.php?url=http://yoursite.com/2019/03/21/LSTM_QA_match/&title=《基于LSTM的问答匹配实践》 — Vince's Blog&pic=http://yoursite.com/img/cover0.png" data-title="微博">
+          <i class="icon icon-weibo"></i>
+        </a>
+      </li>
+      <li>
+        <a class="weixin share-sns wxFab" href="javascript:;" data-title="微信">
+          <i class="icon icon-weixin"></i>
+        </a>
+      </li>
+      <li>
+        <a class="qq share-sns" target="_blank" href="http://connect.qq.com/widget/shareqq/index.html?url=http://yoursite.com/2019/03/21/LSTM_QA_match/&title=《基于LSTM的问答匹配实践》 — Vince's Blog&source=" data-title=" QQ">
+          <i class="icon icon-qq"></i>
+        </a>
+      </li>
+      <li>
+        <a class="facebook share-sns" target="_blank" href="https://www.facebook.com/sharer/sharer.php?u=http://yoursite.com/2019/03/21/LSTM_QA_match/" data-title=" Facebook">
+          <i class="icon icon-facebook"></i>
+        </a>
+      </li>
+      <li>
+        <a class="twitter share-sns" target="_blank" href="https://twitter.com/intent/tweet?text=《基于LSTM的问答匹配实践》 — Vince's Blog&url=http://yoursite.com/2019/03/21/LSTM_QA_match/&via=http://yoursite.com" data-title=" Twitter">
+          <i class="icon icon-twitter"></i>
+        </a>
+      </li>
+      <li>
+        <a class="google share-sns" target="_blank" href="https://plus.google.com/share?url=http://yoursite.com/2019/03/21/LSTM_QA_match/" data-title=" Google+">
+          <i class="icon icon-google-plus"></i>
+        </a>
+      </li>
+    </ul>
+ </div>
+
+
+<div class="page-modal wx-share" id="wxShare">
+    <a class="close" href="javascript:;"><i class="icon icon-close"></i></a>
+    <p>扫一扫，分享到微信</p>
+    <img src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAMYAAADGCAAAAACs8KCBAAACNUlEQVR42u3awWpDMQxE0fz/T79CV4XU6szIKVi+XoWQxu+4oEiWXi95Pd/r/Z2f6/2Tz2LVu9SfaS0YMGAcy3jKVW+w2lJ/dOVQpOOAAQPGBYw6yNaMOuwq37zaRXk2GDBgwHBfZyHYPQ4YMGDAqB83C5p1wqfvCwMGjJsZShHbuQHrB/FttTgMGDAOZLiNgf98/cH+BgwYMA5hPObqFLRZe0B6KhgwYIxmdK66snStPxViZLgwYMAYxMial8pXu+Ma+oHCgAHjHsanA6WSVroH9MtrGDBgjGYooVAfZnUTx2zsbMmGAQPGUEb2iNk72RWe1DaAAQPGaEYdWPde8e8axVgeNwwYMIYy9A30wOeWrO4uy1ocBgwYoxnuZb2L15NRPcguZ0ZgwIAxjtEZttALVzeJzIpbGDBgTGW41/dKwqcHa/dvjf8DDBgwBjH09kA/EOuJ47ZhCxgwYAxiKKmbnkRmTVCluDXmR2DAgDGaoT+cOxa261BgwIABQ78400vTXe1Pe0QMBgwYIxhu+zArerNQawR9GDBgXMPIWgVZKZstGDBg3Mnoj1C4N3n6NZxLggEDxlTGYy69eZC1JLMxNRgwYMxmuAFO2SxrNrgHEcJgwIBxLEMJsuGkRtQq0Eto49cDBgwYIxj9hqJb6Ga/AEskDBgwYMhB000Z3Rz2j9QQBgwYMMyLOb1AzYphGDBg3MZwi1g3vCqJYye5hAEDxmxG1hiwpzmivXYNZ8CAAeNYxhdWvv71q8hHVwAAAABJRU5ErkJggg==" alt="微信分享二维码">
+</div>
+
+
+
+
+    <script src="//cdn.bootcss.com/node-waves/0.7.4/waves.min.js"></script>
+<script>
+var BLOG = { ROOT: '/', SHARE: true, REWARD: false };
+
+
+</script>
+
+<script src="/js/main.min.js?v=1.7.2"></script>
+
+
+<div class="search-panel" id="search-panel">
+    <ul class="search-result" id="search-result"></ul>
+</div>
+<template id="search-tpl">
+<li class="item">
+    <a href="{path}" class="waves-block waves-effect">
+        <div class="title ellipsis" title="{title}">{title}</div>
+        <div class="flex-row flex-middle">
+            <div class="tags ellipsis">
+                {tags}
+            </div>
+            <time class="flex-col time">{date}</time>
+        </div>
+    </a>
+</li>
+</template>
+
+<script src="/js/search.min.js?v=1.7.2" async></script>
+
+
+
+
+
+
+<script async src="//busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script>
+
+
+
+
+
+</body>
+</html>

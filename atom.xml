@@ -6,7 +6,7 @@
   <link href="/atom.xml" rel="self"/>
   
   <link href="http://yoursite.com/"/>
-  <updated>2019-03-21T08:04:26.979Z</updated>
+  <updated>2019-03-21T13:19:24.123Z</updated>
   <id>http://yoursite.com/</id>
   
   <author>
@@ -15,6 +15,57 @@
   </author>
   
   <generator uri="http://hexo.io/">Hexo</generator>
+  
+  <entry>
+    <title>基于LSTM的问答匹配实践</title>
+    <link href="http://yoursite.com/2019/03/21/LSTM_QA_match/"/>
+    <id>http://yoursite.com/2019/03/21/LSTM_QA_match/</id>
+    <published>2019-03-21T12:39:24.657Z</published>
+    <updated>2019-03-21T13:19:24.123Z</updated>
+    
+    <content type="html"><![CDATA[<p>之前的博客里，都写了一些tensorflow的入门学习，当时在学习tensorflow时一个让我很头疼的问题就是，只要自己写大点深点的网络，基本都是跑不动，损失函数降了一阵就不动了，估计可能是初始化，正则防止过拟合没做好。这个LSTM网络算是我难得写出来能跑的网络，现在有空了来记录一下。</p><h2 id="LSTM网络"><a href="#LSTM网络" class="headerlink" title="LSTM网络"></a>LSTM网络</h2><p>LSTM网络是由RNN变化而来，当时一直很困惑的问题就是关于RNN，横的算一层还是竖的算一层，应该是横的算一层，因此最简单的RNN即是一层隐藏层，光看RNN模型图的话，总会有些误解，实际上RNN每个单元的输入对应的状态隐藏层是可以有多个输出的，因为一个单元的输入维度也是n维，对应隐藏层的输出若是m维，则但看这个单元可理解为n到m的全连接网络。这个隐藏层维度一般就是由自己设定。</p><p>同时关于RNN和LSTM的输出，一般在理解模型时，都是以一个句子为例，只需要最后一个序列单元对应的输出，实际上通过tensorflow和keras框架得到的输出，是包括所有单元的，如RNN的输出<br><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">outputs, last_state = tf.nn.static_rnn(cell, inputs)</span><br></pre></td></tr></table></figure></p><p>理论上可认为outputs[-1]与last_state是相等的</p><p>关于LSTM，由于其状态由两个值构成(Ct,Ht)，认为其状态是一个tuple，其输出为<br><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">outputs, state_out = tf.contrib.rnn.static_rnn(cell, inputs, initial_state=tuple_state)</span><br></pre></td></tr></table></figure></p><p>这样得到的state_out包含两个值，若所写的网络中间有多个隐藏层，则可以有更多状态输出。</p><p>同时对于双向LSTM，其输出outputs的每个单元尺寸为两个LSTM的隐藏层输出单元的和</p><h2 id="LSTM网络代码"><a href="#LSTM网络代码" class="headerlink" title="LSTM网络代码"></a>LSTM网络代码</h2><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line">def biLSTMCell(x, hiddenSize):</span><br><span class="line">    input_x = tf.transpose(x, [1, 0, 2])<span class="comment"># 0 1 2 变成1 0 2，最外面两个维度转置</span></span><br><span class="line">    input_x = tf.unstack(input_x)   <span class="comment">#多维变成低维，默认axio = 0，最外层的维度</span></span><br><span class="line">    lstm_fw_cell = tf.contrib.rnn.BasicLSTMCell(hiddenSize, forget_bias=1.0, state_is_tuple=True)</span><br><span class="line">    lstm_bw_cell = tf.contrib.rnn.BasicLSTMCell(hiddenSize, forget_bias=1.0, state_is_tuple=True)</span><br><span class="line">    output, _, _ = tf.contrib.rnn.static_bidirectional_rnn(lstm_fw_cell, lstm_bw_cell, input_x, dtype=tf.float32)</span><br><span class="line">    output = tf.stack(output)       <span class="comment">#一维变成多维</span></span><br><span class="line">    output = tf.transpose(output, [1, 0, 2])</span><br><span class="line">    <span class="built_in">return</span> output</span><br></pre></td></tr></table></figure><p>需要使用unstack与stack函数变化矩阵维度结构，unstack将一个整体tf变量变成了一个数字list内部的多个tf量，作为输入进入网络输出后，再使用stack函数变回整体tf变量。<br><a href="https://github.com/LiHuaBai/LSTM_for_QA_match" target="_blank" rel="noopener">完整代码</a></p>]]></content>
+    
+    <summary type="html">
+    
+      
+      
+        &lt;p&gt;之前的博客里，都写了一些tensorflow的入门学习，当时在学习tensorflow时一个让我很头疼的问题就是，只要自己写大点深点的网络，基本都是跑不动，损失函数降了一阵就不动了，估计可能是初始化，正则防止过拟合没做好。这个LSTM网络算是我难得写出来能跑的网络，现在有空
+      
+    
+    </summary>
+    
+      <category term="DeepLearning" scheme="http://yoursite.com/categories/DeepLearning/"/>
+    
+      <category term="tensorflow" scheme="http://yoursite.com/categories/DeepLearning/tensorflow/"/>
+    
+    
+  </entry>
+  
+  <entry>
+    <title>重开博客采坑记录</title>
+    <link href="http://yoursite.com/2019/03/21/Blog_Git_Experience/"/>
+    <id>http://yoursite.com/2019/03/21/Blog_Git_Experience/</id>
+    <published>2019-03-21T10:09:01.186Z</published>
+    <updated>2019-03-21T10:54:03.850Z</updated>
+    
+    <content type="html"><![CDATA[<p>再次利用hexo搭建个人博客的过程中，依旧踩了很多坑，主要之前Git用的不熟练，现在顺便也补一下Git的配置和使用方法。</p><h2 id="Git主机秘钥配置"><a href="#Git主机秘钥配置" class="headerlink" title="Git主机秘钥配置"></a>Git主机秘钥配置</h2><p>使用Git来进行分布式管理，首先要配置用户名，邮箱，以及主机秘钥<br><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">git config --global user.name <span class="string">"yourname"</span></span><br><span class="line">git config --global user.email <span class="string">"youremail"</span></span><br></pre></td></tr></table></figure></p><p>邮箱与用户名与github一致<br><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">ssh-keygen -t rsa -C <span class="string">"youremail"</span></span><br></pre></td></tr></table></figure></p><p>会让设置密码什么的，一般可以直接回车不设置，完成后在~.ssh/文件夹里，会有公钥id_rsa.pub和私钥id_rsa，公钥在github在github的账号settings的SSH keys处配置。</p><h2 id="两个github账号引起的错误"><a href="#两个github账号引起的错误" class="headerlink" title="两个github账号引起的错误"></a>两个github账号引起的错误</h2><p>想着本来那个账号注册的比较随便，用户名有点怪怪的，于是打算换一个，结果换了一个配置好秘钥后居然不能push到仓库也不能用hexo deploy，原因是第一次用git提交到远程仓库时，需要输入github的账号密码，系统自动记住了，换账号后，需要主要删除之前账号的信息，在控制面板-&gt;用户账户-&gt;凭据管理器（管理windows凭据）处，删除git凭据</p><h2 id="hexo博客搭建各类坑"><a href="#hexo博客搭建各类坑" class="headerlink" title="hexo博客搭建各类坑"></a>hexo博客搭建各类坑</h2><p>原先开启标签和分类后，切换主题后再切回来会出错，导致主题样式异常，需要重新开启标签和分类</p><p>所用主题开启标签和分类后，还需要去改标签和分类的index.md的内容，才能正确显示</p><p>评论系统，开启gitment<br>原先是这样的<br><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">gitment: <span class="literal">false</span></span><br><span class="line"><span class="comment"># gitment:</span></span><br><span class="line"><span class="comment">#   owner: LiHuaBai</span></span><br><span class="line"><span class="comment">#   repo: LiHuaBai.github.io</span></span><br><span class="line"><span class="comment">#   client_id:</span></span><br><span class="line"><span class="comment">#   client_secret:</span></span><br></pre></td></tr></table></figure></p><p>正确开启写法<br><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># gitment: false</span></span><br><span class="line">gitment:</span><br><span class="line">  owner: LiHuaBai</span><br><span class="line">  repo: LiHuaBai.github.io</span><br><span class="line">  client_id:申请的id</span><br><span class="line">  client_secret:申请的secret</span><br></pre></td></tr></table></figure></p><p>在<a href="https://github.com/settings/applications/new" target="_blank" rel="noopener">此处</a>申请OAuthid<br>其中的Homepage URL和Authorization callback URL可以都写成<a href="https://username.github.io" target="_blank" rel="noopener">https://username.github.io</a><br>申请后的OAuth Apps在<a href="https://github.com/settings/developers" target="_blank" rel="noopener">这里</a>查看</p><p>然而配置好依旧不能用，查找后发现是原开发者的服务器已经关闭了，找了一个别人搭好的服务器，在主题的layout文件夹里面找到gitment的部分，修改如下<br><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">&lt;link rel=<span class="string">"stylesheet"</span> href=<span class="string">"https://jjeejj.github.io/css/gitment.css"</span>&gt;</span><br><span class="line">&lt;script src=<span class="string">"https://jjeejj.github.io/js/gitment.js"</span>&gt;&lt;/script&gt;</span><br></pre></td></tr></table></figure></p><p>可正常使用评论功能</p>]]></content>
+    
+    <summary type="html">
+    
+      
+      
+        &lt;p&gt;再次利用hexo搭建个人博客的过程中，依旧踩了很多坑，主要之前Git用的不熟练，现在顺便也补一下Git的配置和使用方法。&lt;/p&gt;
+&lt;h2 id=&quot;Git主机秘钥配置&quot;&gt;&lt;a href=&quot;#Git主机秘钥配置&quot; class=&quot;headerlink&quot; title=&quot;Git主机秘
+      
+    
+    </summary>
+    
+      <category term="采坑" scheme="http://yoursite.com/categories/%E9%87%87%E5%9D%91/"/>
+    
+      <category term="Git" scheme="http://yoursite.com/categories/%E9%87%87%E5%9D%91/Git/"/>
+    
+    
+  </entry>
   
   <entry>
     <title>于是我又重开了这个坑</title>
