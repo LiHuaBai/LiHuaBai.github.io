@@ -55,3 +55,29 @@ gitment:
 <script src="https://jjeejj.github.io/js/gitment.js"></script>
 ```
 可正常使用评论功能
+
+## github存储hexo本地文件
+为了之后换电脑啥的博客不在丢失，觉得最好还是把本地文件存在github上，这样也容易找回，一般来说可以用同一个仓库，新建一个分支，先把仓库中所存储的博客的静态html文件clone下来
+`git clone git@github.com:LiHuaBai/LiHuaBai.github.io.git`
+只留下git文件，其余删除，把hexo文件夹内部的以下文件复制过来
+1. scaffords
+2. source
+3. themes
+4. .gitignore
+5. \_conig.yml
+6. package.json
+然后将这些文件保存在仓库的另一个分支下
+```
+git checkout -b hexo_local_file
+git add --all
+git commit -m "save local file"
+git push --set-upstream origin hexo
+```
+## 利用github重新恢复博客
+将hexo文件从仓库中clone下来，重新安装依赖库后，就可以重新启动了
+```
+git clone -b hexo_local_file git@github.com:LiHuaBai/LiHuaBai.github.io.git
+cnpm install
+hexo g
+hexo s
+```
