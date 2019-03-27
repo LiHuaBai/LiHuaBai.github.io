@@ -1,10 +1,11 @@
 ---
 title: 于是我又重开了这个坑
+date: 2019-03-19 12:05:02
 categories:
-- 日志
+- 日常
 ---
 
-时隔两年，考研结束后的我本想捡回之前的博客（虽然已经闲置一年），兴致满满的一通操作，然而发现1年前电脑重装过后当时的本地hexo文件并没有保存备份，github上只存着静态html，md文件也找不回来。不过想想在原来博客上也没写多少东西，于是乎，我又重开了一个坑。
+时隔两年，考研结束后的我本想捡回之前的博客（虽然已经闲置一年），兴致满满的一通操作，然而发现1年前电脑重装过后当时的本地hexo文件并没有保存备份，github上只存着静态html，md文件也没保存。不过想想在原来博客上也没写多少东西，尝试着恢复了一些内容后，于是，我又重开了一个坑。
 
 ## 起因
 两年前也只是一时脑子一热，觉得有个个人博客还挺帅的，作为一个CS专业的学生，自诩动手能力强，便直接上手搭建了之前的博客（然而都是靠学长的帮助，我似乎并没有干多少事情）。
@@ -22,36 +23,5 @@ categories:
 
 既然已经考上了ZJU的研究生，也总算有了一点学校的优势，接下来的就得让自己在这个更高的平台上有所成就，希望能在硕士阶段较好的融入ZJU的氛围（大佬遍地的感觉真令人感到不安），顺利的发一些paper，目前来说还是做之后找工作的打算的。
 
-## 关于目前
+## 目前的状态
 大学四年，我发现自己确实迫于生计把大多数时间都用在学业上了，以至于现在回想起来，个人兴趣爱好方面的东西在这几年几乎没有任何增长，课外阅读量甚至没有高中三年多。并且有了上一个博客的经验，技术内容确实可能没有那么多可写的，也希望自己趁这段时间多去尝试一些别的事情，多出去逛逛，可能的话也想学一下新的语言之类的，也该丰富一下自己的生活了。
-
-<!--
-``` bash
-$ hexo new "My New Post"
-``` -->
-<!--
-More info: [Writing](https://hexo.io/docs/writing.html)
-
-### Run server
-
-``` bash
-$ hexo server
-```
-
-More info: [Server](https://hexo.io/docs/server.html)
-
-### Generate static files
-
-``` bash
-$ hexo generate
-```
-
-More info: [Generating](https://hexo.io/docs/generating.html)
-
-### Deploy to remote sites
-
-``` bash
-$ hexo deploy
-```
-
-More info: [Deployment](https://hexo.io/docs/deployment.html) -->

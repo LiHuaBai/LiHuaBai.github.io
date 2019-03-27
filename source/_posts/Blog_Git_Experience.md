@@ -1,5 +1,6 @@
 ---
 title: 重开博客采坑记录
+date: 2019-03-19 15:20:13
 categories:
 - 采坑
 - Git
@@ -14,9 +15,7 @@ git config --global user.name "yourname"
 git config --global user.email "youremail"
 ```
 邮箱与用户名与github一致
-``` bash
-ssh-keygen -t rsa -C "youremail"
-```
+`ssh-keygen -t rsa -C "youremail"`
 会让设置密码什么的，一般可以直接回车不设置，完成后在~.ssh/文件夹里，会有公钥id_rsa.pub和私钥id_rsa，公钥在github在github的账号settings的SSH keys处配置。
 
 ## 两个github账号引起的错误
