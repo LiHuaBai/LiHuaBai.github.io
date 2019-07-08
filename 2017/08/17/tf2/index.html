@@ -1,0 +1,446 @@
+<!DOCTYPE html>
+<html>
+<head><meta name="generator" content="Hexo 3.9.0">
+    
+
+    
+
+    
+
+
+
+    <meta charset="utf-8">
+    
+    
+    
+    
+    <title>tensorflow学习笔记（二）——数据类型 | Vince&#39;s Blog | You see the world, the world see you</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+    
+    <meta name="theme-color" content="#3F51B5">
+    
+    
+    <meta name="keywords" content>
+    <meta name="description" content="看了官网的教程，先跑了第一个例程，大概学习了tensorflow的几种数据类型以及程序流程">
+<meta property="og:type" content="article">
+<meta property="og:title" content="tensorflow学习笔记（二）——数据类型">
+<meta property="og:url" content="https://github.com/LiHuaBai/2017/08/17/tf2/index.html">
+<meta property="og:site_name" content="Vince&#39;s Blog">
+<meta property="og:description" content="看了官网的教程，先跑了第一个例程，大概学习了tensorflow的几种数据类型以及程序流程">
+<meta property="og:locale" content="zh-CN">
+<meta property="og:updated_time" content="2019-07-08T12:25:32.846Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="tensorflow学习笔记（二）——数据类型">
+<meta name="twitter:description" content="看了官网的教程，先跑了第一个例程，大概学习了tensorflow的几种数据类型以及程序流程">
+    
+        <link rel="alternate" type="application/atom+xml" title="Vince&#39;s Blog" href="/atom.xml">
+    
+    <link rel="shortcut icon" href="/favicon.ico">
+    <link rel="stylesheet" href="/css/style.css?v=1.7.2">
+    <script>window.lazyScripts=[]</script>
+
+    <!-- custom head -->
+    
+
+</head>
+
+<body>
+    <div id="loading" class="active"></div>
+
+    <aside id="menu" class="hide" >
+  <div class="inner flex-row-vertical">
+    <a href="javascript:;" class="header-icon waves-effect waves-circle waves-light" id="menu-off">
+        <i class="icon icon-lg icon-close"></i>
+    </a>
+    <div class="brand-wrap" style="background-image:url(/img/drawerCover0.jpg)">
+      <div class="brand">
+        <a href="/" class="avatar waves-effect waves-circle waves-light">
+          <img src="/img/cover0.png">
+        </a>
+        <hgroup class="introduce">
+          <h5 class="nickname">毛靖文</h5>
+          <a href="mailto:785512526@qq.com" title="785512526@qq.com" class="mail">785512526@qq.com</a>
+        </hgroup>
+      </div>
+    </div>
+    <div class="scroll-wrap flex-col">
+      <ul class="nav">
+        
+            <li class="waves-block waves-effect">
+              <a href="/"  >
+                <i class="icon icon-lg icon-home"></i>
+                Home
+              </a>
+            </li>
+        
+            <li class="waves-block waves-effect">
+              <a href="/archives"  >
+                <i class="icon icon-lg icon-archives"></i>
+                Archives
+              </a>
+            </li>
+        
+            <li class="waves-block waves-effect">
+              <a href="/categories"  >
+                <i class="icon icon-lg icon-th-list"></i>
+                Categories
+              </a>
+            </li>
+        
+            <li class="waves-block waves-effect">
+              <a href="https://github.com/LiHuaBai" target="_blank" >
+                <i class="icon icon-lg icon-github"></i>
+                Github
+              </a>
+            </li>
+        
+      </ul>
+    </div>
+  </div>
+</aside>
+
+    <main id="main">
+        <header class="top-header" id="header">
+    <div class="flex-row">
+        <a href="javascript:;" class="header-icon waves-effect waves-circle waves-light on" id="menu-toggle">
+          <i class="icon icon-lg icon-navicon"></i>
+        </a>
+        <div class="flex-col header-title ellipsis">tensorflow学习笔记（二）——数据类型</div>
+        
+        <div class="search-wrap" id="search-wrap">
+            <a href="javascript:;" class="header-icon waves-effect waves-circle waves-light" id="back">
+                <i class="icon icon-lg icon-chevron-left"></i>
+            </a>
+            <input type="text" id="key" class="search-input" autocomplete="off" placeholder="输入感兴趣的关键字">
+            <a href="javascript:;" class="header-icon waves-effect waves-circle waves-light" id="search">
+                <i class="icon icon-lg icon-search"></i>
+            </a>
+        </div>
+        
+        
+        <a href="javascript:;" class="header-icon waves-effect waves-circle waves-light" id="menuShare">
+            <i class="icon icon-lg icon-share-alt"></i>
+        </a>
+        
+    </div>
+</header>
+<header class="content-header post-header">
+
+    <div class="container fade-scale" style="padding:0 16px">
+        <h1 class="title" style="padding-top: 12px; padding-left: 300px; font-size:50px;">tensorflow学习笔记（二）——数据类型</h1>
+        <h5 class="subtitle" style="font-size: 24px;padding-left: 260px; padding-top: 8px; font-weight: 400; color: #a56f6f;">
+            
+                <time datetime="2017-08-16T16:00:00.000Z" itemprop="datePublished" class="page-time">
+  2017-08-17
+</time>
+
+
+	<ul class="article-category-list"><li class="article-category-list-item"><a class="article-category-list-link" href="/categories/DeepLearning/">DeepLearning</a><ul class="article-category-list-child"><li class="article-category-list-item"><a class="article-category-list-link" href="/categories/DeepLearning/tensorflow/">tensorflow</a></li></ul></li></ul>
+
+            
+        </h5>
+    </div>
+
+    
+
+
+</header>
+
+
+<div class="container body-wrap" style="width: 1160px;">
+    
+    <aside class="post-widget">
+        <nav class="post-toc-wrap post-toc-shrink" id="post-toc">
+            <h4>TOC</h4>
+            <ol class="post-toc"><li class="post-toc-item post-toc-level-2"><a class="post-toc-link" href="#数据类型"><span class="post-toc-number">1.</span> <span class="post-toc-text">数据类型</span></a></li><li class="post-toc-item post-toc-level-2"><a class="post-toc-link" href="#完整代码"><span class="post-toc-number">2.</span> <span class="post-toc-text">完整代码</span></a></li></ol>
+        </nav>
+    </aside>
+
+
+<article id="post-tf2"
+  class="post-article article-type-post fade" itemprop="blogPost">
+
+    <div class="post-card">
+        <h1 class="post-card-title">tensorflow学习笔记（二）——数据类型</h1>
+        <div class="post-meta">
+            <time class="post-time" title="2017-08-17 00:00:00" datetime="2017-08-16T16:00:00.000Z"  itemprop="datePublished">2017-08-17</time>
+
+            
+	<ul class="article-category-list"><li class="article-category-list-item"><a class="article-category-list-link" href="/categories/DeepLearning/">DeepLearning</a><ul class="article-category-list-child"><li class="article-category-list-item"><a class="article-category-list-link" href="/categories/DeepLearning/tensorflow/">tensorflow</a></li></ul></li></ul>
+
+
+
+            
+<span id="busuanzi_container_page_pv" title="文章总阅读量" style='display:none'>
+    <i class="icon icon-eye icon-pr"></i><span id="busuanzi_value_page_pv"></span>
+</span>
+
+
+        </div>
+        <div class="post-content" id="post-content" itemprop="postContent">
+            <p>看了官网的教程，先跑了第一个例程，大概学习了tensorflow的几种数据类型以及程序流程<br><a id="more"></a></p>
+<h2 id="数据类型"><a href="#数据类型" class="headerlink" title="数据类型"></a>数据类型</h2><p>tensorflow的数据以张量的形式构成，其形状和类型的设定和实际数值的写入是分开的，主要有常量，变量和占位符三种类型：<br>这是基本的python数组<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"># 普通的python数组</span><br><span class="line">a = [[1., 2., 3.], [4., 5., 6.]]</span><br></pre></td></tr></table></figure></p>
+<p>对于tensorflow常量<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"># tensorflow常量的赋值只能为定值，dtype定义了其数据为浮点型,name为其命名</span><br><span class="line">b1 = tf.constant(3,dtype=tf.float32,name = &apos;b1&apos;)</span><br><span class="line">b2 = tf.constant(a,dtype=tf.float32)</span><br><span class="line"># 也可用b1 = tf.constant(3,&quot;float&quot;)定义</span><br><span class="line"># 测试后发现tf.zeros([5]),tf.ones([5,5]),tf.random_uniform([5, 5], -2.0, 2.0)创建的也为常量数据</span><br><span class="line"># 其实质和constant相同，zeros等为常量的名称</span><br><span class="line"># 我理解为constant常量可用于给变量或占位符进行赋值</span><br></pre></td></tr></table></figure></p>
+<p>对于tensorflow变量<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line">c1 = tf.Variable(a, dtype = tf.float32,name = &apos;c1&apos;)</span><br><span class="line">c2 = tf.Variable(b1, dtype = tf.float32)</span><br><span class="line">c3 = tf.Variable(tf.ones([5,5]))</span><br><span class="line">c4 = tf.Variable(tf.random_uniform([5, 5], -2.0, 2.0))</span><br><span class="line"></span><br><span class="line"># tensorflow变量可直接使用python普通数组赋值，也可用tensorflow常量</span><br><span class="line"># 若所赋的初始化值已定义数据类型，则可以不再定义</span><br><span class="line"># 使用变量需先初始化，在计算中其值是不断变换的，一般形状大小设置固定，用作被训练的权重等</span><br></pre></td></tr></table></figure></p>
+<p>对于tensorflow占位符<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"># 占位符是事先设定好，用来接受外部输入的一个值，一般用作训练样本和标签的数据</span><br><span class="line"># shape定义的形状大小，None代表任意大小，也可先不定义，与输入数据相同</span><br><span class="line">x1 = tf.placeholder(tf.float32)</span><br><span class="line">x2 = tf.placeholder(tf.float32,[None,3])</span><br><span class="line">x3 = tf.placeholder(dtype = tf.float32,shape = (2,2))</span><br><span class="line"></span><br><span class="line"># 在进行运算时，将数据从外部输入</span><br><span class="line">print(sess.run([x1,x2,x3], feed_dict = &#123;x1:[[1,2],[1,2],[3,4]],x2:[[1,2,3],[2,6,4]],x3:[[1,2],[3,4]]&#125;))</span><br></pre></td></tr></table></figure></p>
+<h2 id="完整代码"><a href="#完整代码" class="headerlink" title="完整代码"></a>完整代码</h2><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br></pre></td><td class="code"><pre><span class="line">import tensorflow as tf</span><br><span class="line">a = [[1., 2., 3.], [4., 5., 6.]]</span><br><span class="line">b1 = tf.constant(3,dtype=tf.float32,name = &apos;b1&apos;)</span><br><span class="line">b2 = tf.constant(a,dtype=tf.float32)</span><br><span class="line">print(b1)</span><br><span class="line">print(b2)</span><br><span class="line">c1 = tf.Variable(a, dtype = tf.float32,name = &apos;c1&apos;)</span><br><span class="line">c2 = tf.Variable(b1, dtype = tf.float32)</span><br><span class="line">c3 = tf.Variable(tf.ones([5,5]))</span><br><span class="line">c4 = tf.Variable(tf.random_uniform([5, 5], -2.0, 2.0))</span><br><span class="line">x1 = tf.placeholder(tf.float32)</span><br><span class="line">x2 = tf.placeholder(tf.float32,[None,3])</span><br><span class="line">x3 = tf.placeholder(dtype = tf.float32,shape = (2,2))</span><br><span class="line">sess = tf.Session()</span><br><span class="line"># 创建图</span><br><span class="line">init = tf.global_variables_initializer()</span><br><span class="line">sess.run(init)</span><br><span class="line"># 将所有变量初始化</span><br><span class="line">print(sess.run([b1,b2]))</span><br><span class="line">print(sess.run([c1,c2,c3,c4]))</span><br><span class="line">print(sess.run([x1,x2,x3], feed_dict = &#123;x1:[[1,2],[1,2],[3,4]],x2:[[1,2,3],[2,6,4]],x3:[[1,2],[3,4]]&#125;))</span><br></pre></td></tr></table></figure>
+
+        </div>
+
+        <blockquote class="post-copyright">
+    
+    <footer>
+        <a href="https://github.com/LiHuaBai">
+            <img src="/img/cover0.png" alt="毛靖文">
+            毛靖文
+        </a>
+    </footer>
+</blockquote>
+
+        
+
+
+        <div class="post-footer">
+            
+
+            
+<div class="page-share-wrap">
+    
+
+<div class="page-share" id="pageShare">
+    <ul class="reset share-icons">
+      <li>
+        <a class="weibo share-sns" target="_blank" href="http://service.weibo.com/share/share.php?url=https://github.com/LiHuaBai/2017/08/17/tf2/&title=《tensorflow学习笔记（二）——数据类型》 — Vince's Blog&pic=https://github.com/LiHuaBai/img/cover0.png" data-title="微博">
+          <i class="icon icon-weibo"></i>
+        </a>
+      </li>
+      <li>
+        <a class="weixin share-sns wxFab" href="javascript:;" data-title="微信">
+          <i class="icon icon-weixin"></i>
+        </a>
+      </li>
+      <li>
+        <a class="qq share-sns" target="_blank" href="http://connect.qq.com/widget/shareqq/index.html?url=https://github.com/LiHuaBai/2017/08/17/tf2/&title=《tensorflow学习笔记（二）——数据类型》 — Vince's Blog&source=看了官网的教程，先跑了第一个例程，大概学习了tensorflow的几种数据类型以及程序流程" data-title=" QQ">
+          <i class="icon icon-qq"></i>
+        </a>
+      </li>
+      <li>
+        <a class="facebook share-sns" target="_blank" href="https://www.facebook.com/sharer/sharer.php?u=https://github.com/LiHuaBai/2017/08/17/tf2/" data-title=" Facebook">
+          <i class="icon icon-facebook"></i>
+        </a>
+      </li>
+      <li>
+        <a class="twitter share-sns" target="_blank" href="https://twitter.com/intent/tweet?text=《tensorflow学习笔记（二）——数据类型》 — Vince's Blog&url=https://github.com/LiHuaBai/2017/08/17/tf2/&via=https://github.com/LiHuaBai" data-title=" Twitter">
+          <i class="icon icon-twitter"></i>
+        </a>
+      </li>
+      <li>
+        <a class="google share-sns" target="_blank" href="https://plus.google.com/share?url=https://github.com/LiHuaBai/2017/08/17/tf2/" data-title=" Google+">
+          <i class="icon icon-google-plus"></i>
+        </a>
+      </li>
+    </ul>
+ </div>
+
+
+
+    <a href="javascript:;" id="shareFab" class="page-share-fab waves-effect waves-circle">
+        <i class="icon icon-share-alt icon-lg"></i>
+    </a>
+</div>
+
+
+
+        </div>
+    </div>
+
+    
+<nav class="post-nav flex-row flex-justify-between">
+  
+    <div class="waves-block waves-effect prev">
+      <a href="/2017/08/18/tf3/" id="post-prev" class="post-nav-link">
+        <div class="tips"><i class="icon icon-angle-left icon-lg icon-pr"></i> Prev</div>
+        <h4 class="title">tensorflow学习笔记（三）——前馈神经网络</h4>
+      </a>
+    </div>
+  
+
+  
+    <div class="waves-block waves-effect next">
+      <a href="/2017/08/02/firstblog/" id="post-next" class="post-nav-link">
+        <div class="tips">Next <i class="icon icon-angle-right icon-lg icon-pl"></i></div>
+        <h4 class="title">写在最开始</h4>
+      </a>
+    </div>
+  
+</nav>
+
+
+
+    
+
+
+
+
+
+
+
+
+<section class="comments" id="comments">
+    <div id="gitment_thread"></div>
+    <link rel="stylesheet" href="https://jjeejj.github.io/css/gitment.css">
+    <script src="https://jjeejj.github.io/js/gitment.js"></script>
+    <script>
+        var gitment = new Gitment({
+            owner: 'LiHuaBai',
+            repo: 'LiHuaBai.github.io',
+            oauth: {
+                client_id: 'b23d56ef27956eb7776f',
+                client_secret: 'f31d9fe193744d83b2332c97fce5914607fe0bdf',
+            },
+        })
+        gitment.render('comments')
+    </script>
+</section>
+
+
+
+
+
+
+
+
+
+
+
+
+
+</article>
+
+
+
+</div>
+
+        <footer class="footer">
+    <div class="top">
+        
+<p>
+    <span id="busuanzi_container_site_uv" style='display:none'>
+        站点总访客数：<span id="busuanzi_value_site_uv"></span>
+    </span>
+    <span id="busuanzi_container_site_pv" style='display:none'>
+        站点总访问量：<span id="busuanzi_value_site_pv"></span>
+    </span>
+</p>
+
+
+        <p>
+            
+                <span><a href="/atom.xml" target="_blank" class="rss" title="rss"><i class="icon icon-lg icon-rss"></i></a></span>
+            
+            <span>博客内容遵循 <a rel="license" href="https://creativecommons.org/licenses/by-nc-sa/4.0/deed.zh">知识共享 署名 - 非商业性 - 相同方式共享 4.0 国际协议</a></span>
+        </p>
+    </div>
+    <div class="bottom">
+        <p><span>毛靖文 &copy; 2015 - 2019</span>
+            <span>
+                
+                Power by <a href="http://hexo.io/" target="_blank">Hexo</a> Theme <a href="https://github.com/yscoder/hexo-theme-indigo" target="_blank">indigo</a>
+            </span>
+        </p>
+    </div>
+</footer>
+
+    </main>
+    <div class="mask" id="mask"></div>
+<a href="javascript:;" id="gotop" class="waves-effect waves-circle waves-light"><span class="icon icon-lg icon-chevron-up"></span></a>
+
+
+
+<div class="global-share" id="globalShare">
+    <ul class="reset share-icons">
+      <li>
+        <a class="weibo share-sns" target="_blank" href="http://service.weibo.com/share/share.php?url=https://github.com/LiHuaBai/2017/08/17/tf2/&title=《tensorflow学习笔记（二）——数据类型》 — Vince's Blog&pic=https://github.com/LiHuaBai/img/cover0.png" data-title="微博">
+          <i class="icon icon-weibo"></i>
+        </a>
+      </li>
+      <li>
+        <a class="weixin share-sns wxFab" href="javascript:;" data-title="微信">
+          <i class="icon icon-weixin"></i>
+        </a>
+      </li>
+      <li>
+        <a class="qq share-sns" target="_blank" href="http://connect.qq.com/widget/shareqq/index.html?url=https://github.com/LiHuaBai/2017/08/17/tf2/&title=《tensorflow学习笔记（二）——数据类型》 — Vince's Blog&source=看了官网的教程，先跑了第一个例程，大概学习了tensorflow的几种数据类型以及程序流程" data-title=" QQ">
+          <i class="icon icon-qq"></i>
+        </a>
+      </li>
+      <li>
+        <a class="facebook share-sns" target="_blank" href="https://www.facebook.com/sharer/sharer.php?u=https://github.com/LiHuaBai/2017/08/17/tf2/" data-title=" Facebook">
+          <i class="icon icon-facebook"></i>
+        </a>
+      </li>
+      <li>
+        <a class="twitter share-sns" target="_blank" href="https://twitter.com/intent/tweet?text=《tensorflow学习笔记（二）——数据类型》 — Vince's Blog&url=https://github.com/LiHuaBai/2017/08/17/tf2/&via=https://github.com/LiHuaBai" data-title=" Twitter">
+          <i class="icon icon-twitter"></i>
+        </a>
+      </li>
+      <li>
+        <a class="google share-sns" target="_blank" href="https://plus.google.com/share?url=https://github.com/LiHuaBai/2017/08/17/tf2/" data-title=" Google+">
+          <i class="icon icon-google-plus"></i>
+        </a>
+      </li>
+    </ul>
+ </div>
+
+
+<div class="page-modal wx-share" id="wxShare">
+    <a class="close" href="javascript:;"><i class="icon icon-close"></i></a>
+    <p>扫一扫，分享到微信</p>
+    <img src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAMYAAADGCAAAAACs8KCBAAACIklEQVR42u3ayw7CMAxE0f7/TxeJFRJqMjNOEXVuVghamtOF5UeOQ17ne31/Hl/zua7uvbrruGPBgAHjsYxzuMaPH18/hl1tOrsLBgwYOzDcAKqE4Mor0PcGAwYMGMpW9G+UdBAGDBgw1gZct3CdpHcwYMCAMWRkW3RDswK4vRaHAQPGAxmVwcDdn38034ABA8YfM05z6QVtvXln7AoGDBitGcoBCGW7vwFPwjEMGDCaMtyQlw0pK6MFKVmEAQNGa4Z7s07KClR9JDAJuzBgwGjEyIrJtQe8ssEDDBgwdmPoxyCywJoNHcPTIjBgwGjHcDenF59ZgZodMoMBA0Zvhhtwle+zVl12sAwGDBg7MPTBpJ2cyY93AVJFDgMGjEYMKZDJ7bDsSFk9cYQBA8YOjMoAMit69cAt3QUDBozWjKztXjk0VkEawwYYMGC0Y7gHHfTS1z6hZj4RBgwYOzCy9n1WiFaOoE3CNAwYMFoz3HZ8lm/qL8sdYdq3wYAB44EM/a/rGaibCBrXwIABYwPGqgZZBsuunySFMGDAaMRw/67ySKP/lxXSMGDAaMo4zVUvYpVf7UEFDBgwWjOywlXB1Jtr9iQWBgwYrRn6iNGdOWRhOjtwBgMGjB0YWePMaIfdNpCAAQMGDD0FrDfX9HBfyl5hwICxAcNtt2WvRi+VYcCAsQ+jHjQr/6CnidIkFgYMGO0YawcDyrayULsAAwMGjOcxXiL10T+K0UJhAAAAAElFTkSuQmCC" alt="微信分享二维码">
+</div>
+
+
+
+
+    <script src="//cdn.bootcss.com/node-waves/0.7.4/waves.min.js"></script>
+<script>
+var BLOG = { ROOT: '/', SHARE: true, REWARD: false };
+
+
+</script>
+
+<script src="/js/main.min.js?v=1.7.2"></script>
+
+
+<div class="search-panel" id="search-panel">
+    <ul class="search-result" id="search-result"></ul>
+</div>
+<template id="search-tpl">
+<li class="item">
+    <a href="{path}" class="waves-block waves-effect">
+        <div class="title ellipsis" title="{title}">{title}</div>
+        <div class="flex-row flex-middle">
+            <div class="tags ellipsis">
+                {tags}
+            </div>
+            <time class="flex-col time">{date}</time>
+        </div>
+    </a>
+</li>
+</template>
+
+<script src="/js/search.min.js?v=1.7.2" async></script>
+
+
+
+
+
+
+<script async src="//busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script>
+
+
+
+
+
+</body>
+</html>

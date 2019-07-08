@@ -1,0 +1,473 @@
+<!DOCTYPE html>
+<html>
+<head><meta name="generator" content="Hexo 3.9.0">
+    
+
+    
+
+    
+
+
+
+    <meta charset="utf-8">
+    
+    
+    
+    
+    <title>爬虫入门（一） | Vince&#39;s Blog | You see the world, the world see you</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+    
+    <meta name="theme-color" content="#3F51B5">
+    
+    
+    <meta name="keywords" content>
+    <meta name="description" content="一直以来都觉得爬虫是个很神奇的东西，既然已经学了Python，就准备自己来写写看">
+<meta property="og:type" content="article">
+<meta property="og:title" content="爬虫入门（一）">
+<meta property="og:url" content="https://github.com/LiHuaBai/2017/09/05/spider1/index.html">
+<meta property="og:site_name" content="Vince&#39;s Blog">
+<meta property="og:description" content="一直以来都觉得爬虫是个很神奇的东西，既然已经学了Python，就准备自己来写写看">
+<meta property="og:locale" content="zh-CN">
+<meta property="og:image" content="https://github.com/img/chrom.png">
+<meta property="og:image" content="https://github.com/img/58htm.jpg">
+<meta property="og:image" content="https://github.com/img/58data.jpg">
+<meta property="og:updated_time" content="2019-07-08T12:25:32.846Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="爬虫入门（一）">
+<meta name="twitter:description" content="一直以来都觉得爬虫是个很神奇的东西，既然已经学了Python，就准备自己来写写看">
+<meta name="twitter:image" content="https://github.com/img/chrom.png">
+    
+        <link rel="alternate" type="application/atom+xml" title="Vince&#39;s Blog" href="/atom.xml">
+    
+    <link rel="shortcut icon" href="/favicon.ico">
+    <link rel="stylesheet" href="/css/style.css?v=1.7.2">
+    <script>window.lazyScripts=[]</script>
+
+    <!-- custom head -->
+    
+
+</head>
+
+<body>
+    <div id="loading" class="active"></div>
+
+    <aside id="menu" class="hide" >
+  <div class="inner flex-row-vertical">
+    <a href="javascript:;" class="header-icon waves-effect waves-circle waves-light" id="menu-off">
+        <i class="icon icon-lg icon-close"></i>
+    </a>
+    <div class="brand-wrap" style="background-image:url(/img/drawerCover0.jpg)">
+      <div class="brand">
+        <a href="/" class="avatar waves-effect waves-circle waves-light">
+          <img src="/img/cover0.png">
+        </a>
+        <hgroup class="introduce">
+          <h5 class="nickname">毛靖文</h5>
+          <a href="mailto:785512526@qq.com" title="785512526@qq.com" class="mail">785512526@qq.com</a>
+        </hgroup>
+      </div>
+    </div>
+    <div class="scroll-wrap flex-col">
+      <ul class="nav">
+        
+            <li class="waves-block waves-effect">
+              <a href="/"  >
+                <i class="icon icon-lg icon-home"></i>
+                Home
+              </a>
+            </li>
+        
+            <li class="waves-block waves-effect">
+              <a href="/archives"  >
+                <i class="icon icon-lg icon-archives"></i>
+                Archives
+              </a>
+            </li>
+        
+            <li class="waves-block waves-effect">
+              <a href="/categories"  >
+                <i class="icon icon-lg icon-th-list"></i>
+                Categories
+              </a>
+            </li>
+        
+            <li class="waves-block waves-effect">
+              <a href="https://github.com/LiHuaBai" target="_blank" >
+                <i class="icon icon-lg icon-github"></i>
+                Github
+              </a>
+            </li>
+        
+      </ul>
+    </div>
+  </div>
+</aside>
+
+    <main id="main">
+        <header class="top-header" id="header">
+    <div class="flex-row">
+        <a href="javascript:;" class="header-icon waves-effect waves-circle waves-light on" id="menu-toggle">
+          <i class="icon icon-lg icon-navicon"></i>
+        </a>
+        <div class="flex-col header-title ellipsis">爬虫入门（一）</div>
+        
+        <div class="search-wrap" id="search-wrap">
+            <a href="javascript:;" class="header-icon waves-effect waves-circle waves-light" id="back">
+                <i class="icon icon-lg icon-chevron-left"></i>
+            </a>
+            <input type="text" id="key" class="search-input" autocomplete="off" placeholder="输入感兴趣的关键字">
+            <a href="javascript:;" class="header-icon waves-effect waves-circle waves-light" id="search">
+                <i class="icon icon-lg icon-search"></i>
+            </a>
+        </div>
+        
+        
+        <a href="javascript:;" class="header-icon waves-effect waves-circle waves-light" id="menuShare">
+            <i class="icon icon-lg icon-share-alt"></i>
+        </a>
+        
+    </div>
+</header>
+<header class="content-header post-header">
+
+    <div class="container fade-scale" style="padding:0 16px">
+        <h1 class="title" style="padding-top: 12px; padding-left: 300px; font-size:50px;">爬虫入门（一）</h1>
+        <h5 class="subtitle" style="font-size: 24px;padding-left: 260px; padding-top: 8px; font-weight: 400; color: #a56f6f;">
+            
+                <time datetime="2017-09-04T16:00:00.000Z" itemprop="datePublished" class="page-time">
+  2017-09-05
+</time>
+
+
+	<ul class="article-category-list"><li class="article-category-list-item"><a class="article-category-list-link" href="/categories/Python/">Python</a></li></ul>
+
+            
+        </h5>
+    </div>
+
+    
+
+
+</header>
+
+
+<div class="container body-wrap" style="width: 1160px;">
+    
+    <aside class="post-widget">
+        <nav class="post-toc-wrap post-toc-shrink" id="post-toc">
+            <h4>TOC</h4>
+            <ol class="post-toc"><li class="post-toc-item post-toc-level-2"><a class="post-toc-link" href="#要用到的库"><span class="post-toc-number">1.</span> <span class="post-toc-text">要用到的库</span></a></li><li class="post-toc-item post-toc-level-2"><a class="post-toc-link" href="#实现原理"><span class="post-toc-number">2.</span> <span class="post-toc-text">实现原理</span></a></li><li class="post-toc-item post-toc-level-2"><a class="post-toc-link" href="#完整代码"><span class="post-toc-number">3.</span> <span class="post-toc-text">完整代码</span></a></li></ol>
+        </nav>
+    </aside>
+
+
+<article id="post-spider1"
+  class="post-article article-type-post fade" itemprop="blogPost">
+
+    <div class="post-card">
+        <h1 class="post-card-title">爬虫入门（一）</h1>
+        <div class="post-meta">
+            <time class="post-time" title="2017-09-05 00:00:00" datetime="2017-09-04T16:00:00.000Z"  itemprop="datePublished">2017-09-05</time>
+
+            
+	<ul class="article-category-list"><li class="article-category-list-item"><a class="article-category-list-link" href="/categories/Python/">Python</a></li></ul>
+
+
+
+            
+<span id="busuanzi_container_page_pv" title="文章总阅读量" style='display:none'>
+    <i class="icon icon-eye icon-pr"></i><span id="busuanzi_value_page_pv"></span>
+</span>
+
+
+        </div>
+        <div class="post-content" id="post-content" itemprop="postContent">
+            <p>一直以来都觉得爬虫是个很神奇的东西，既然已经学了Python，就准备自己来写写看<br><a id="more"></a></p>
+<h2 id="要用到的库"><a href="#要用到的库" class="headerlink" title="要用到的库"></a>要用到的库</h2><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">import urllib.request</span><br><span class="line">import urllib.parse</span><br><span class="line">import re</span><br></pre></td></tr></table></figure>
+<p>在Python3较后的版本里，urllib库被封装在urllib.request，功能基本是类似的。</p>
+<h2 id="实现原理"><a href="#实现原理" class="headerlink" title="实现原理"></a>实现原理</h2><p>爬虫的根本原理是模拟浏览器的行为，从而获取数据，然而现在web技术发展较快，浏览器也有不同的方法来得到数据，我看了些资料，主要就找到两种较常见的方法，一是后端静态加载的网页，通过获取其html源码来得到数据，二是利用JS异步请求动态加载的，通过请求得到JSON数据。</p>
+<p>我首先试着获取静态加载的网页，在这里选择了58同城的二手房页面。可以在chrom浏览器开发者工具（F12）的network里看到网址信息<br><figure class="image-bubble">
+                <div class="img-lightbox">
+                    <div class="overlay"></div>
+                    <img src="/img/chrom.png" alt="浏览器信息" title>
+                </div>
+                <div class="image-caption">浏览器信息</div>
+            </figure></p>
+<p>模拟浏览器的所需的信息在Request Hearders（作为请求头）和Query String Parameters（作为请求发送的数据）<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br></pre></td><td class="code"><pre><span class="line"># url地址，这里选择了江干区二手房的第三页，不过其后天数据有随机性，并不固定</span><br><span class="line">url=&apos;http://hz.58.com/jianggan/ershoufang/pn3/?&apos;</span><br><span class="line">data=&#123;&#125;</span><br><span class="line">head=&#123;&#125;</span><br><span class="line"># 请求头</span><br><span class="line">head[&apos;User-Agent&apos;]=&apos;Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/60.0.3112.78 Safari/537.36&apos;</span><br><span class="line"># 请求数据</span><br><span class="line">data[&apos;utm_source&apos;]=&apos;sem-sales-baidu-pc&apos;</span><br><span class="line">data[&apos;utm_campaign&apos;]=&apos;sell&apos;</span><br><span class="line">data[&apos;utm_medium&apos;]=&apos;cpc&apos;</span><br><span class="line">data[&apos;spm&apos;]=&apos;62854932425.16537920598&apos;</span><br><span class="line">data[&apos;PGTID&apos;]=&apos;0d300000-0000-0a0c-8067-a60b6ee48510&apos;</span><br><span class="line">data[&apos;ClickID&apos;]=1</span><br><span class="line">data=urllib.parse.urlencode(data).encode(&apos;utf-8&apos;)</span><br><span class="line">req=urllib.request.Request(url,data,head,method=&apos;GET&apos;)</span><br><span class="line"># 将请求得到的响应（response）下载下来</span><br><span class="line">req = urllib.request.urlopen(req)</span><br><span class="line">my_data = req.read()</span><br></pre></td></tr></table></figure></p>
+<p>在获得了html源码数据后，如何提取所需的内容，通常是利用正则表达式，这对于没认真学正则的我来说还是挺头疼的，主要是要提取标签内的数据，同时对于byte，str，list，obj，dict等数据结构要会转换运用，才能得到想要的内容。</p>
+<h2 id="完整代码"><a href="#完整代码" class="headerlink" title="完整代码"></a>完整代码</h2><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br></pre></td><td class="code"><pre><span class="line">import urllib.request</span><br><span class="line">import urllib.parse</span><br><span class="line">import re</span><br><span class="line">#保存HTML源码</span><br><span class="line">def saveFile(data):</span><br><span class="line">    path = &quot;D:\\python\\Spider\\58\\html.out&quot;</span><br><span class="line">    f = open(path,&apos;wb&apos;)</span><br><span class="line">    f.write(data)</span><br><span class="line">    f.close()</span><br><span class="line">#所需要的数据，考虑到正则匹配的水平太差，就挑了好拿的部分</span><br><span class="line">content = &#123;&#125;</span><br><span class="line">content[&apos;tingshi&apos;] = []</span><br><span class="line">content[&apos;daxiao&apos;] = []</span><br><span class="line">content[&apos;chaoxiang&apos;] = []</span><br><span class="line">content[&apos;louceng&apos;] = []</span><br><span class="line">content[&apos;jiedao&apos;] = []</span><br><span class="line">content[&apos;price&apos;] = []</span><br><span class="line">name = [&apos;tingshi&apos;,&apos;daxiao&apos;,&apos;chaoxiang&apos;,&apos;louceng&apos;,&apos;jiedao&apos;]</span><br><span class="line">#正则匹配式</span><br><span class="line">res_tr1 = r&quot;&lt;ul class=&apos;house-list-wrap&apos;&gt;(.*?)&lt;/ul&gt;&quot;</span><br><span class="line">res_tr2 = r&quot;&lt;span&gt;(.*?)&lt;/span&gt;&quot;</span><br><span class="line">res_price = r&apos;&lt;b&gt;(.*?)&lt;/b&gt;&apos;</span><br><span class="line">res_jiedao = r&apos;&lt;a&gt;(.*?)&lt;/a&gt;&apos;</span><br><span class="line">def getdata(datalist):</span><br><span class="line">    num = -1</span><br><span class="line">    for x in datalist:</span><br><span class="line">        num = num + 1</span><br><span class="line">        num = num%6;</span><br><span class="line">        if num == 5:</span><br><span class="line">            continue</span><br><span class="line">        if num &lt; 4:</span><br><span class="line">            print(x)</span><br><span class="line">            content[name[num]].append(x)</span><br><span class="line">        if num == 4:</span><br><span class="line">            content[name[num]].append(re.findall(res_jiedao,x,re.S|re.M))</span><br><span class="line">url=&apos;http://hz.58.com/jianggan/ershoufang/pn3/?&apos;</span><br><span class="line">data=&#123;&#125;</span><br><span class="line">head=&#123;&#125;</span><br><span class="line">head[&apos;User-Agent&apos;]=&apos;Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/60.0.3112.78 Safari/537.36&apos;</span><br><span class="line">data[&apos;utm_source&apos;]=&apos;sem-sales-baidu-pc&apos;</span><br><span class="line">data[&apos;utm_campaign&apos;]=&apos;sell&apos;</span><br><span class="line">data[&apos;utm_medium&apos;]=&apos;cpc&apos;</span><br><span class="line">data[&apos;spm&apos;]=&apos;62854932425.16537920598&apos;</span><br><span class="line">data[&apos;PGTID&apos;]=&apos;0d300000-0000-0a0c-8067-a60b6ee48510&apos;</span><br><span class="line">data[&apos;ClickID&apos;]=1</span><br><span class="line">data=urllib.parse.urlencode(data).encode(&apos;utf-8&apos;)</span><br><span class="line">req=urllib.request.Request(url,data,head,method=&apos;GET&apos;)</span><br><span class="line">req = urllib.request.urlopen(req)</span><br><span class="line">my_data = req.read()</span><br><span class="line">saveFile(my_data)</span><br><span class="line">#匹配出ul标签内数据</span><br><span class="line">my_strdata = bytes.decode(my_data)</span><br><span class="line">m_list1 =  re.findall(res_tr1,my_strdata,re.S|re.M)</span><br><span class="line">m_tr1 = &quot;&quot;.join(m_list1)</span><br><span class="line">content[&apos;price&apos;] =  re.findall(res_price,m_tr1,re.S|re.M)</span><br><span class="line">m_list2 =  re.findall(res_tr2,m_tr1,re.S|re.M)</span><br><span class="line">getdata(m_list2)</span><br><span class="line">print(content)</span><br></pre></td></tr></table></figure>
+<figure class="image-bubble">
+                <div class="img-lightbox">
+                    <div class="overlay"></div>
+                    <img src="/img/58htm.jpg" alt="html源码" title>
+                </div>
+                <div class="image-caption">html源码</div>
+            </figure>
+<figure class="image-bubble">
+                <div class="img-lightbox">
+                    <div class="overlay"></div>
+                    <img src="/img/58data.jpg" alt="提取逐个数据" title>
+                </div>
+                <div class="image-caption">提取逐个数据</div>
+            </figure>
+<p>在实际操作中，还是出现了一些状况，对于ul标签内的每一份二手房数据，部分会缺失一部分信息（如建造时间，地铁距离未标明），在提取的时候还是会导致出错，由于该网站后台提供数据是有一定随机性的，尝试几次后，有时能完整提取，有时候就会因为数据的不完整性，导致爬取格式出错。</p>
+
+        </div>
+
+        <blockquote class="post-copyright">
+    
+    <footer>
+        <a href="https://github.com/LiHuaBai">
+            <img src="/img/cover0.png" alt="毛靖文">
+            毛靖文
+        </a>
+    </footer>
+</blockquote>
+
+        
+
+
+        <div class="post-footer">
+            
+
+            
+<div class="page-share-wrap">
+    
+
+<div class="page-share" id="pageShare">
+    <ul class="reset share-icons">
+      <li>
+        <a class="weibo share-sns" target="_blank" href="http://service.weibo.com/share/share.php?url=https://github.com/LiHuaBai/2017/09/05/spider1/&title=《爬虫入门（一）》 — Vince's Blog&pic=https://github.com/LiHuaBai/img/cover0.png" data-title="微博">
+          <i class="icon icon-weibo"></i>
+        </a>
+      </li>
+      <li>
+        <a class="weixin share-sns wxFab" href="javascript:;" data-title="微信">
+          <i class="icon icon-weixin"></i>
+        </a>
+      </li>
+      <li>
+        <a class="qq share-sns" target="_blank" href="http://connect.qq.com/widget/shareqq/index.html?url=https://github.com/LiHuaBai/2017/09/05/spider1/&title=《爬虫入门（一）》 — Vince's Blog&source=一直以来都觉得爬虫是个很神奇的东西，既然已经学了Python，就准备自己来写写看" data-title=" QQ">
+          <i class="icon icon-qq"></i>
+        </a>
+      </li>
+      <li>
+        <a class="facebook share-sns" target="_blank" href="https://www.facebook.com/sharer/sharer.php?u=https://github.com/LiHuaBai/2017/09/05/spider1/" data-title=" Facebook">
+          <i class="icon icon-facebook"></i>
+        </a>
+      </li>
+      <li>
+        <a class="twitter share-sns" target="_blank" href="https://twitter.com/intent/tweet?text=《爬虫入门（一）》 — Vince's Blog&url=https://github.com/LiHuaBai/2017/09/05/spider1/&via=https://github.com/LiHuaBai" data-title=" Twitter">
+          <i class="icon icon-twitter"></i>
+        </a>
+      </li>
+      <li>
+        <a class="google share-sns" target="_blank" href="https://plus.google.com/share?url=https://github.com/LiHuaBai/2017/09/05/spider1/" data-title=" Google+">
+          <i class="icon icon-google-plus"></i>
+        </a>
+      </li>
+    </ul>
+ </div>
+
+
+
+    <a href="javascript:;" id="shareFab" class="page-share-fab waves-effect waves-circle">
+        <i class="icon icon-share-alt icon-lg"></i>
+    </a>
+</div>
+
+
+
+        </div>
+    </div>
+
+    
+<nav class="post-nav flex-row flex-justify-between">
+  
+    <div class="waves-block waves-effect prev">
+      <a href="/2019/02/27/LSTM_QA_match/" id="post-prev" class="post-nav-link">
+        <div class="tips"><i class="icon icon-angle-left icon-lg icon-pr"></i> Prev</div>
+        <h4 class="title">基于LSTM的问答匹配实践</h4>
+      </a>
+    </div>
+  
+
+  
+    <div class="waves-block waves-effect next">
+      <a href="/2017/08/18/tf3/" id="post-next" class="post-nav-link">
+        <div class="tips">Next <i class="icon icon-angle-right icon-lg icon-pl"></i></div>
+        <h4 class="title">tensorflow学习笔记（三）——前馈神经网络</h4>
+      </a>
+    </div>
+  
+</nav>
+
+
+
+    
+
+
+
+
+
+
+
+
+<section class="comments" id="comments">
+    <div id="gitment_thread"></div>
+    <link rel="stylesheet" href="https://jjeejj.github.io/css/gitment.css">
+    <script src="https://jjeejj.github.io/js/gitment.js"></script>
+    <script>
+        var gitment = new Gitment({
+            owner: 'LiHuaBai',
+            repo: 'LiHuaBai.github.io',
+            oauth: {
+                client_id: 'b23d56ef27956eb7776f',
+                client_secret: 'f31d9fe193744d83b2332c97fce5914607fe0bdf',
+            },
+        })
+        gitment.render('comments')
+    </script>
+</section>
+
+
+
+
+
+
+
+
+
+
+
+
+
+</article>
+
+
+
+</div>
+
+        <footer class="footer">
+    <div class="top">
+        
+<p>
+    <span id="busuanzi_container_site_uv" style='display:none'>
+        站点总访客数：<span id="busuanzi_value_site_uv"></span>
+    </span>
+    <span id="busuanzi_container_site_pv" style='display:none'>
+        站点总访问量：<span id="busuanzi_value_site_pv"></span>
+    </span>
+</p>
+
+
+        <p>
+            
+                <span><a href="/atom.xml" target="_blank" class="rss" title="rss"><i class="icon icon-lg icon-rss"></i></a></span>
+            
+            <span>博客内容遵循 <a rel="license" href="https://creativecommons.org/licenses/by-nc-sa/4.0/deed.zh">知识共享 署名 - 非商业性 - 相同方式共享 4.0 国际协议</a></span>
+        </p>
+    </div>
+    <div class="bottom">
+        <p><span>毛靖文 &copy; 2015 - 2019</span>
+            <span>
+                
+                Power by <a href="http://hexo.io/" target="_blank">Hexo</a> Theme <a href="https://github.com/yscoder/hexo-theme-indigo" target="_blank">indigo</a>
+            </span>
+        </p>
+    </div>
+</footer>
+
+    </main>
+    <div class="mask" id="mask"></div>
+<a href="javascript:;" id="gotop" class="waves-effect waves-circle waves-light"><span class="icon icon-lg icon-chevron-up"></span></a>
+
+
+
+<div class="global-share" id="globalShare">
+    <ul class="reset share-icons">
+      <li>
+        <a class="weibo share-sns" target="_blank" href="http://service.weibo.com/share/share.php?url=https://github.com/LiHuaBai/2017/09/05/spider1/&title=《爬虫入门（一）》 — Vince's Blog&pic=https://github.com/LiHuaBai/img/cover0.png" data-title="微博">
+          <i class="icon icon-weibo"></i>
+        </a>
+      </li>
+      <li>
+        <a class="weixin share-sns wxFab" href="javascript:;" data-title="微信">
+          <i class="icon icon-weixin"></i>
+        </a>
+      </li>
+      <li>
+        <a class="qq share-sns" target="_blank" href="http://connect.qq.com/widget/shareqq/index.html?url=https://github.com/LiHuaBai/2017/09/05/spider1/&title=《爬虫入门（一）》 — Vince's Blog&source=一直以来都觉得爬虫是个很神奇的东西，既然已经学了Python，就准备自己来写写看" data-title=" QQ">
+          <i class="icon icon-qq"></i>
+        </a>
+      </li>
+      <li>
+        <a class="facebook share-sns" target="_blank" href="https://www.facebook.com/sharer/sharer.php?u=https://github.com/LiHuaBai/2017/09/05/spider1/" data-title=" Facebook">
+          <i class="icon icon-facebook"></i>
+        </a>
+      </li>
+      <li>
+        <a class="twitter share-sns" target="_blank" href="https://twitter.com/intent/tweet?text=《爬虫入门（一）》 — Vince's Blog&url=https://github.com/LiHuaBai/2017/09/05/spider1/&via=https://github.com/LiHuaBai" data-title=" Twitter">
+          <i class="icon icon-twitter"></i>
+        </a>
+      </li>
+      <li>
+        <a class="google share-sns" target="_blank" href="https://plus.google.com/share?url=https://github.com/LiHuaBai/2017/09/05/spider1/" data-title=" Google+">
+          <i class="icon icon-google-plus"></i>
+        </a>
+      </li>
+    </ul>
+ </div>
+
+
+<div class="page-modal wx-share" id="wxShare">
+    <a class="close" href="javascript:;"><i class="icon icon-close"></i></a>
+    <p>扫一扫，分享到微信</p>
+    <img src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAMYAAADGCAAAAACs8KCBAAACNElEQVR42u3aS27DMAxF0ex/0y7QqRv5PtJJYep6FCCJpOOBwN/rhZ/j9yHfnj+f/3ucnvXvb3tkyJDxWMaxfN5tsN7y3Tpr6nqX9ZoyZMjYgUGuUbINWbN2fV+cWYYMGTKWS19chThklCFDhoy7GDxBTRnpxS1DhozdGCSZ5AU4fqx/yMVlyJDxQEbaGPjm5w/2N2TIkPEQxhE+vKzPg7wbTiVDhozRjFpxPy201QYv0nVkyJAxlZFunxbg0nSUNEf/2EuGDBkbMFDZvZR21obJ+AoyZMjYh5GGa+tjBWlnaYzjIraVIUPGUEbaGPhEk7IDkyFDxmwGCfh48slTUHJ9pzvKkCFjNiMNFknayb/lvw/GMmTIkDGaQTbrND55qzIODWXIkLEZgy/XSVZrLYfaqJkMGTKey6iFYiTp5QFlbdhChgwZuzHSQK1T4q8V6YrDFjJkyBjBuGvcoZhS4igVJa4yZMgYykjzWt5uTEPJVsFOhgwZoxnkYuVPLShMhy0uwDJkyBjHqF15afmet0V540GGDBl7MkgQxlNcntZ2Xh+KFmXIkPFwxr3jFGkjoVaYC0pvMmTIGMHopKlpcb/zsi6CSxkyZIxmdBqNnUJbety4KytDhoxxjFozkr+h9Li1hqgMGTJ2YPBCGC/Dpa+pNUYmQ4YMGfj66yfA/PfFC1eGDBlbMniQR8LN2nlkyJCxA4NvmYaJnJ3iZciQsQ8jTR3TMYs0TSXrFIc2ZMiQ8TzGD3ft9Rt2kaT5AAAAAElFTkSuQmCC" alt="微信分享二维码">
+</div>
+
+
+
+
+    <script src="//cdn.bootcss.com/node-waves/0.7.4/waves.min.js"></script>
+<script>
+var BLOG = { ROOT: '/', SHARE: true, REWARD: false };
+
+
+</script>
+
+<script src="/js/main.min.js?v=1.7.2"></script>
+
+
+<div class="search-panel" id="search-panel">
+    <ul class="search-result" id="search-result"></ul>
+</div>
+<template id="search-tpl">
+<li class="item">
+    <a href="{path}" class="waves-block waves-effect">
+        <div class="title ellipsis" title="{title}">{title}</div>
+        <div class="flex-row flex-middle">
+            <div class="tags ellipsis">
+                {tags}
+            </div>
+            <time class="flex-col time">{date}</time>
+        </div>
+    </a>
+</li>
+</template>
+
+<script src="/js/search.min.js?v=1.7.2" async></script>
+
+
+
+
+
+
+<script async src="//busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script>
+
+
+
+
+
+</body>
+</html>
