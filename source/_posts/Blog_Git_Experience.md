@@ -16,7 +16,7 @@ git config --global user.email "youremail"
 ```
 邮箱与用户名与github一致
 `ssh-keygen -t rsa -C "youremail"`
-会让设置密码什么的，一般可以直接回车不设置，完成后在~.ssh/文件夹里，会有公钥id_rsa.pub和私钥id_rsa，公钥在github在github的账号settings的SSH keys处配置。
+会让设置密码什么的，一般可以直接回车不设置，完成后在~.ssh/文件夹里，会有公钥id_rsa.pub和私钥id_rsa，公钥在github在github的账号settings的SSH keys处配置。（新电脑第一次设置好秘钥，clone或push时git会报错The authenticity of host 'github.com (13.229.188.59)' can't be established，后面要输入yes/no，得手动输入yes，直接回车会失败）
 
 ## 两个github账号引起的错误
 想着本来那个账号注册的比较随便，用户名有点怪怪的，于是打算换一个，结果换了一个配置好秘钥后居然不能push到仓库也不能用hexo deploy，原因是第一次用git提交到远程仓库时，需要输入github的账号密码，系统自动记住了，换账号后，需要主要删除之前账号的信息，在控制面板->用户账户->凭据管理器（管理windows凭据）处，删除git凭据
