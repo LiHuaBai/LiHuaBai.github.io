@@ -1,0 +1,462 @@
+<!DOCTYPE html>
+<html>
+<head><meta name="generator" content="Hexo 3.9.0">
+    
+
+    
+
+    
+
+
+
+    <meta charset="utf-8">
+    
+    
+    
+    
+    <title>基于U-Net网络架构的语义分割 | Vince&#39;s Blog | You see the world, the world see you</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+    
+    <meta name="theme-color" content="#3F51B5">
+    
+    
+    <meta name="keywords" content>
+    <meta name="description" content="毕业设计做了下语义分割相关的东西，主要是根据U-Net网络架构，并附加了一些残差卷积的变化。">
+<meta property="og:type" content="article">
+<meta property="og:title" content="基于U-Net网络架构的语义分割">
+<meta property="og:url" content="https://github.com/LiHuaBai/2019/06/15/Unet/index.html">
+<meta property="og:site_name" content="Vince&#39;s Blog">
+<meta property="og:description" content="毕业设计做了下语义分割相关的东西，主要是根据U-Net网络架构，并附加了一些残差卷积的变化。">
+<meta property="og:locale" content="zh-CN">
+<meta property="og:image" content="https://github.com/img/Unet.png">
+<meta property="og:image" content="https://github.com/img/ResModule.png">
+<meta property="og:image" content="https://github.com/img/ResUnet.png">
+<meta property="og:updated_time" content="2019-07-22T16:24:32.005Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="基于U-Net网络架构的语义分割">
+<meta name="twitter:description" content="毕业设计做了下语义分割相关的东西，主要是根据U-Net网络架构，并附加了一些残差卷积的变化。">
+<meta name="twitter:image" content="https://github.com/img/Unet.png">
+    
+        <link rel="alternate" type="application/atom+xml" title="Vince&#39;s Blog" href="/atom.xml">
+    
+    <link rel="shortcut icon" href="/favicon.ico">
+    <link rel="stylesheet" href="/css/style.css?v=1.7.2">
+    <script>window.lazyScripts=[]</script>
+
+    <!-- custom head -->
+    
+
+</head>
+
+<body>
+    <div id="loading" class="active"></div>
+
+    <aside id="menu" class="hide" >
+  <div class="inner flex-row-vertical">
+    <a href="javascript:;" class="header-icon waves-effect waves-circle waves-light" id="menu-off">
+        <i class="icon icon-lg icon-close"></i>
+    </a>
+    <div class="brand-wrap" style="background-image:url(/img/drawerCover0.jpg)">
+      <div class="brand">
+        <a href="/" class="avatar waves-effect waves-circle waves-light">
+          <img src="/img/cover0.png">
+        </a>
+        <hgroup class="introduce">
+          <h5 class="nickname">毛靖文</h5>
+          <a href="mailto:785512526@qq.com" title="785512526@qq.com" class="mail">785512526@qq.com</a>
+        </hgroup>
+      </div>
+    </div>
+    <div class="scroll-wrap flex-col">
+      <ul class="nav">
+        
+            <li class="waves-block waves-effect">
+              <a href="/"  >
+                <i class="icon icon-lg icon-home"></i>
+                Home
+              </a>
+            </li>
+        
+            <li class="waves-block waves-effect">
+              <a href="/archives"  >
+                <i class="icon icon-lg icon-archives"></i>
+                Archives
+              </a>
+            </li>
+        
+            <li class="waves-block waves-effect">
+              <a href="/categories"  >
+                <i class="icon icon-lg icon-th-list"></i>
+                Categories
+              </a>
+            </li>
+        
+            <li class="waves-block waves-effect">
+              <a href="https://github.com/LiHuaBai" target="_blank" >
+                <i class="icon icon-lg icon-github"></i>
+                Github
+              </a>
+            </li>
+        
+      </ul>
+    </div>
+  </div>
+</aside>
+
+    <main id="main">
+        <header class="top-header" id="header">
+    <div class="flex-row">
+        <a href="javascript:;" class="header-icon waves-effect waves-circle waves-light on" id="menu-toggle">
+          <i class="icon icon-lg icon-navicon"></i>
+        </a>
+        <div class="flex-col header-title ellipsis">基于U-Net网络架构的语义分割</div>
+        
+        <div class="search-wrap" id="search-wrap">
+            <a href="javascript:;" class="header-icon waves-effect waves-circle waves-light" id="back">
+                <i class="icon icon-lg icon-chevron-left"></i>
+            </a>
+            <input type="text" id="key" class="search-input" autocomplete="off" placeholder="输入感兴趣的关键字">
+            <a href="javascript:;" class="header-icon waves-effect waves-circle waves-light" id="search">
+                <i class="icon icon-lg icon-search"></i>
+            </a>
+        </div>
+        
+        
+        <a href="javascript:;" class="header-icon waves-effect waves-circle waves-light" id="menuShare">
+            <i class="icon icon-lg icon-share-alt"></i>
+        </a>
+        
+    </div>
+</header>
+<header class="content-header post-header">
+
+    <div class="container fade-scale" style="padding:0 16px">
+        <h1 class="title" style="padding-top: 12px; padding-left: 300px; font-size:50px;">基于U-Net网络架构的语义分割</h1>
+        <h5 class="subtitle" style="font-size: 24px;padding-left: 260px; padding-top: 8px; font-weight: 400; color: #a56f6f;">
+            
+                <time datetime="2019-06-14T16:00:00.000Z" itemprop="datePublished" class="page-time">
+  2019-06-15
+</time>
+
+
+	<ul class="article-category-list"><li class="article-category-list-item"><a class="article-category-list-link" href="/categories/DeepLearning/">DeepLearning</a><ul class="article-category-list-child"><li class="article-category-list-item"><a class="article-category-list-link" href="/categories/DeepLearning/keras/">keras</a></li></ul></li></ul>
+
+            
+        </h5>
+    </div>
+
+    
+
+
+</header>
+
+
+<div class="container body-wrap" style="width: 1160px;">
+    
+    <aside class="post-widget">
+        <nav class="post-toc-wrap post-toc-shrink" id="post-toc">
+            <h4>TOC</h4>
+            <ol class="post-toc"><li class="post-toc-item post-toc-level-2"><a class="post-toc-link" href="#数据集"><span class="post-toc-number">1.</span> <span class="post-toc-text">数据集</span></a></li><li class="post-toc-item post-toc-level-2"><a class="post-toc-link" href="#U-Net结构"><span class="post-toc-number">2.</span> <span class="post-toc-text">U-Net结构</span></a></li><li class="post-toc-item post-toc-level-2"><a class="post-toc-link" href="#残差卷积"><span class="post-toc-number">3.</span> <span class="post-toc-text">残差卷积</span></a></li><li class="post-toc-item post-toc-level-2"><a class="post-toc-link" href="#数据增强"><span class="post-toc-number">4.</span> <span class="post-toc-text">数据增强</span></a></li></ol>
+        </nav>
+    </aside>
+
+
+<article id="post-Unet"
+  class="post-article article-type-post fade" itemprop="blogPost">
+
+    <div class="post-card">
+        <h1 class="post-card-title">基于U-Net网络架构的语义分割</h1>
+        <div class="post-meta">
+            <time class="post-time" title="2019-06-15 00:00:00" datetime="2019-06-14T16:00:00.000Z"  itemprop="datePublished">2019-06-15</time>
+
+            
+	<ul class="article-category-list"><li class="article-category-list-item"><a class="article-category-list-link" href="/categories/DeepLearning/">DeepLearning</a><ul class="article-category-list-child"><li class="article-category-list-item"><a class="article-category-list-link" href="/categories/DeepLearning/keras/">keras</a></li></ul></li></ul>
+
+
+
+            
+<span id="busuanzi_container_page_pv" title="文章总阅读量" style='display:none'>
+    <i class="icon icon-eye icon-pr"></i><span id="busuanzi_value_page_pv"></span>
+</span>
+
+
+        </div>
+        <div class="post-content" id="post-content" itemprop="postContent">
+            <p>毕业设计做了下语义分割相关的东西，主要是根据U-Net网络架构，并附加了一些残差卷积的变化。<br><a id="more"></a></p>
+<h2 id="数据集"><a href="#数据集" class="headerlink" title="数据集"></a>数据集</h2><p>数据集为来自kaggle上<a href="https://www.kaggle.com/c/tgs-salt-identification-challenge" target="_blank" rel="noopener">盐体分割比赛</a>的图像集，图片大小为101*101像素，目标为将原图像中含盐的区域分割出来。由于总共为4000张图片，为轻量级图像，经试验，选取训练集：验证集：测试集比例为6：2：2</p>
+<h2 id="U-Net结构"><a href="#U-Net结构" class="headerlink" title="U-Net结构"></a>U-Net结构</h2><p>标准的U-Net网络结构如图所示<br><figure class="image-bubble">
+                <div class="img-lightbox">
+                    <div class="overlay"></div>
+                    <img src="/img/Unet.png" alt="标准网络结构" title>
+                </div>
+                <div class="image-caption">标准网络结构</div>
+            </figure><br>网络结构为U型，左侧为压缩路径，右侧为拓展路径。实际在实验中，为了方便计算将输入大小调整为128*128，且左右两侧对应层的大小一致（论文中的标准结构左侧的需要裁剪后才能拼接至右侧）。<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br></pre></td><td class="code"><pre><span class="line">inputs = Input(input_size)</span><br><span class="line">conv1 = Conv2D(64, 3, activation = &apos;relu&apos;, padding = &apos;same&apos;, kernel_initializer = &apos;he_normal&apos;)(inputs)</span><br><span class="line">conv1 = Conv2D(64, 3, activation = &apos;relu&apos;, padding = &apos;same&apos;, kernel_initializer = &apos;he_normal&apos;)(conv1)</span><br><span class="line">pool1 = MaxPooling2D(pool_size=(2, 2))(conv1)</span><br><span class="line"># 128-&gt;64</span><br><span class="line">conv2 = Conv2D(128, 3, activation = &apos;relu&apos;, padding = &apos;same&apos;, kernel_initializer = &apos;he_normal&apos;)(pool1)</span><br><span class="line">conv2 = Conv2D(128, 3, activation = &apos;relu&apos;, padding = &apos;same&apos;, kernel_initializer = &apos;he_normal&apos;)(conv2)</span><br><span class="line">pool2 = MaxPooling2D(pool_size=(2, 2))(conv2)</span><br><span class="line"># 64-&gt;32</span><br><span class="line">conv3 = Conv2D(256, 3, activation = &apos;relu&apos;, padding = &apos;same&apos;, kernel_initializer = &apos;he_normal&apos;)(pool2)</span><br><span class="line">conv3 = Conv2D(256, 3, activation = &apos;relu&apos;, padding = &apos;same&apos;, kernel_initializer = &apos;he_normal&apos;)(conv3)</span><br><span class="line">pool3 = MaxPooling2D(pool_size=(2, 2))(conv3)</span><br><span class="line"># 32-&gt;16</span><br><span class="line">conv4 = Conv2D(512, 3, activation = &apos;relu&apos;, padding = &apos;same&apos;, kernel_initializer = &apos;he_normal&apos;)(pool3)</span><br><span class="line">conv4 = Conv2D(512, 3, activation = &apos;relu&apos;, padding = &apos;same&apos;, kernel_initializer = &apos;he_normal&apos;)(conv4)</span><br><span class="line">drop4 = Dropout(0.5)(conv4)</span><br><span class="line">pool4 = MaxPooling2D(pool_size=(2, 2))(drop4)</span><br><span class="line"># 16-&gt;8</span><br><span class="line"></span><br><span class="line">conv5 = Conv2D(1024, 3, activation = &apos;relu&apos;, padding = &apos;same&apos;, kernel_initializer = &apos;he_normal&apos;)(pool4)</span><br><span class="line">conv5 = Conv2D(1024, 3, activation = &apos;relu&apos;, padding = &apos;same&apos;, kernel_initializer = &apos;he_normal&apos;)(conv5)</span><br><span class="line">drop5 = Dropout(0.5)(conv5)</span><br><span class="line"></span><br><span class="line">up6 = Conv2D(512, 2, activation = &apos;relu&apos;, padding = &apos;same&apos;, kernel_initializer = &apos;he_normal&apos;)(UpSampling2D(size = (2,2))(drop5))</span><br><span class="line">merge6 = concatenate([drop4,up6], axis = 3)</span><br><span class="line">conv6 = Conv2D(512, 3, activation = &apos;relu&apos;, padding = &apos;same&apos;, kernel_initializer = &apos;he_normal&apos;)(merge6)</span><br><span class="line">conv6 = Conv2D(512, 3, activation = &apos;relu&apos;, padding = &apos;same&apos;, kernel_initializer = &apos;he_normal&apos;)(conv6)</span><br><span class="line"></span><br><span class="line">up7 = Conv2D(256, 2, activation = &apos;relu&apos;, padding = &apos;same&apos;, kernel_initializer = &apos;he_normal&apos;)(UpSampling2D(size = (2,2))(conv6))</span><br><span class="line">merge7 = concatenate([conv3,up7], axis = 3)</span><br><span class="line">conv7 = Conv2D(256, 3, activation = &apos;relu&apos;, padding = &apos;same&apos;, kernel_initializer = &apos;he_normal&apos;)(merge7)</span><br><span class="line">conv7 = Conv2D(256, 3, activation = &apos;relu&apos;, padding = &apos;same&apos;, kernel_initializer = &apos;he_normal&apos;)(conv7)</span><br><span class="line"></span><br><span class="line">up8 = Conv2D(128, 2, activation = &apos;relu&apos;, padding = &apos;same&apos;, kernel_initializer = &apos;he_normal&apos;)(UpSampling2D(size = (2,2))(conv7))</span><br><span class="line">merge8 = concatenate([conv2,up8], axis = 3)</span><br><span class="line">conv8 = Conv2D(128, 3, activation = &apos;relu&apos;, padding = &apos;same&apos;, kernel_initializer = &apos;he_normal&apos;)(merge8)</span><br><span class="line">conv8 = Conv2D(128, 3, activation = &apos;relu&apos;, padding = &apos;same&apos;, kernel_initializer = &apos;he_normal&apos;)(conv8)</span><br><span class="line"></span><br><span class="line">up9 = Conv2D(64, 2, activation = &apos;relu&apos;, padding = &apos;same&apos;, kernel_initializer = &apos;he_normal&apos;)(UpSampling2D(size = (2,2))(conv8))</span><br><span class="line">merge9 = concatenate([conv1,up9], axis = 3)</span><br><span class="line">conv9 = Conv2D(64, 3, activation = &apos;relu&apos;, padding = &apos;same&apos;, kernel_initializer = &apos;he_normal&apos;)(merge9)</span><br><span class="line">conv9 = Conv2D(64, 3, activation = &apos;relu&apos;, padding = &apos;same&apos;, kernel_initializer = &apos;he_normal&apos;)(conv9)</span><br><span class="line">conv9 = Conv2D(2, 3, activation = &apos;relu&apos;, padding = &apos;same&apos;, kernel_initializer = &apos;he_normal&apos;)(conv9)</span><br><span class="line">conv10 = Conv2D(1, 1, activation = &apos;sigmoid&apos;)(conv9)</span><br><span class="line"></span><br><span class="line">model = Model(inputs = inputs, outputs = conv10)</span><br></pre></td></tr></table></figure></p>
+<p>对于网络的目标函数，采用交并比IOU<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br></pre></td><td class="code"><pre><span class="line">def get_iou_vector(A, B):</span><br><span class="line">    # Numpy version</span><br><span class="line">    batch_size = A.shape[0]</span><br><span class="line">    metric = 0.0</span><br><span class="line">    for batch in range(batch_size):</span><br><span class="line">        t, p = A[batch], B[batch]</span><br><span class="line">        true = np.sum(t)</span><br><span class="line">        pred = np.sum(p)</span><br><span class="line"></span><br><span class="line">        # deal with empty mask first</span><br><span class="line">        if true == 0:</span><br><span class="line">            metric += (pred == 0)</span><br><span class="line">            continue</span><br><span class="line"></span><br><span class="line">        # non empty mask case.  Union is never empty</span><br><span class="line">        # hence it is safe to divide by its number of pixels</span><br><span class="line">        intersection = np.sum(t * p)</span><br><span class="line">        union = true + pred - intersection</span><br><span class="line">        iou = intersection / union</span><br><span class="line"></span><br><span class="line">        # iou metrric is a stepwise approximation of the real iou over 0.5</span><br><span class="line">        iou = np.floor(max(0, (iou - 0.45) * 20)) / 10</span><br><span class="line"></span><br><span class="line">        metric += iou</span><br><span class="line"></span><br><span class="line">    # teake the average over all images in batch</span><br><span class="line">    metric /= batch_size</span><br><span class="line">    return metric</span><br><span class="line"></span><br><span class="line">def my_iou_metric(label, pred):</span><br><span class="line">    # Tensorflow version</span><br><span class="line">    return tf.py_func(get_iou_vector, [label, pred &gt; 0.5], tf.float64)</span><br></pre></td></tr></table></figure></p>
+<h2 id="残差卷积"><a href="#残差卷积" class="headerlink" title="残差卷积"></a>残差卷积</h2><p>为了提高分割准确度，在原有模型基础上引入残差卷积的模块，<br><figure class="image-bubble">
+                <div class="img-lightbox">
+                    <div class="overlay"></div>
+                    <img src="/img/ResModule.png" alt="残差卷积" title>
+                </div>
+                <div class="image-caption">残差卷积</div>
+            </figure><br>即为将前面层的输入与后面的输出直接相加作为模块的输出，结合得到的ResUnet结构示例如下：<br><figure class="image-bubble">
+                <div class="img-lightbox">
+                    <div class="overlay"></div>
+                    <img src="/img/ResUnet.png" alt="ResUnet" title>
+                </div>
+                <div class="image-caption">ResUnet</div>
+            </figure></p>
+<h2 id="数据增强"><a href="#数据增强" class="headerlink" title="数据增强"></a>数据增强</h2><p>在实验中采用imgaug框架进行数据增强的相关操作，比对后，对图像数据集采用1：1的扩充比，同时选取镜像变换作为主要增强手段</p>
+<p><a href="https://github.com/LiHuaBai/Unet_For_Salt_Identification">实验代码</a></p>
+
+        </div>
+
+        <blockquote class="post-copyright">
+    
+    <footer>
+        <a href="https://github.com/LiHuaBai">
+            <img src="/img/cover0.png" alt="毛靖文">
+            毛靖文
+        </a>
+    </footer>
+</blockquote>
+
+        
+
+
+        <div class="post-footer">
+            
+
+            
+<div class="page-share-wrap">
+    
+
+<div class="page-share" id="pageShare">
+    <ul class="reset share-icons">
+      <li>
+        <a class="weibo share-sns" target="_blank" href="http://service.weibo.com/share/share.php?url=https://github.com/LiHuaBai/2019/06/15/Unet/&title=《基于U-Net网络架构的语义分割》 — Vince's Blog&pic=https://github.com/LiHuaBai/img/cover0.png" data-title="微博">
+          <i class="icon icon-weibo"></i>
+        </a>
+      </li>
+      <li>
+        <a class="weixin share-sns wxFab" href="javascript:;" data-title="微信">
+          <i class="icon icon-weixin"></i>
+        </a>
+      </li>
+      <li>
+        <a class="qq share-sns" target="_blank" href="http://connect.qq.com/widget/shareqq/index.html?url=https://github.com/LiHuaBai/2019/06/15/Unet/&title=《基于U-Net网络架构的语义分割》 — Vince's Blog&source=毕业设计做了下语义分割相关的东西，主要是根据U-Net网络架构，并附加了一些残差卷积的变化。" data-title=" QQ">
+          <i class="icon icon-qq"></i>
+        </a>
+      </li>
+      <li>
+        <a class="facebook share-sns" target="_blank" href="https://www.facebook.com/sharer/sharer.php?u=https://github.com/LiHuaBai/2019/06/15/Unet/" data-title=" Facebook">
+          <i class="icon icon-facebook"></i>
+        </a>
+      </li>
+      <li>
+        <a class="twitter share-sns" target="_blank" href="https://twitter.com/intent/tweet?text=《基于U-Net网络架构的语义分割》 — Vince's Blog&url=https://github.com/LiHuaBai/2019/06/15/Unet/&via=https://github.com/LiHuaBai" data-title=" Twitter">
+          <i class="icon icon-twitter"></i>
+        </a>
+      </li>
+      <li>
+        <a class="google share-sns" target="_blank" href="https://plus.google.com/share?url=https://github.com/LiHuaBai/2019/06/15/Unet/" data-title=" Google+">
+          <i class="icon icon-google-plus"></i>
+        </a>
+      </li>
+    </ul>
+ </div>
+
+
+
+    <a href="javascript:;" id="shareFab" class="page-share-fab waves-effect waves-circle">
+        <i class="icon icon-share-alt icon-lg"></i>
+    </a>
+</div>
+
+
+
+        </div>
+    </div>
+
+    
+<nav class="post-nav flex-row flex-justify-between flex-row-reverse">
+  
+
+  
+    <div class="waves-block waves-effect next">
+      <a href="/2019/03/23/postgraduate2/" id="post-next" class="post-nav-link">
+        <div class="tips">Next <i class="icon icon-angle-right icon-lg icon-pl"></i></div>
+        <h4 class="title">19浙大计算机考研总结（二）</h4>
+      </a>
+    </div>
+  
+</nav>
+
+
+
+    
+
+
+
+
+
+
+
+
+<section class="comments" id="comments">
+    <div id="gitment_thread"></div>
+    <link rel="stylesheet" href="https://jjeejj.github.io/css/gitment.css">
+    <script src="https://jjeejj.github.io/js/gitment.js"></script>
+    <script>
+        var gitment = new Gitment({
+            owner: 'LiHuaBai',
+            repo: 'LiHuaBai.github.io',
+            oauth: {
+                client_id: 'b23d56ef27956eb7776f',
+                client_secret: 'f31d9fe193744d83b2332c97fce5914607fe0bdf',
+            },
+        })
+        gitment.render('comments')
+    </script>
+</section>
+
+
+
+
+
+
+
+
+
+
+
+
+
+</article>
+
+
+
+</div>
+
+        <footer class="footer">
+    <div class="top">
+        
+<p>
+    <span id="busuanzi_container_site_uv" style='display:none'>
+        站点总访客数：<span id="busuanzi_value_site_uv"></span>
+    </span>
+    <span id="busuanzi_container_site_pv" style='display:none'>
+        站点总访问量：<span id="busuanzi_value_site_pv"></span>
+    </span>
+</p>
+
+
+        <p>
+            
+                <span><a href="/atom.xml" target="_blank" class="rss" title="rss"><i class="icon icon-lg icon-rss"></i></a></span>
+            
+            <span>博客内容遵循 <a rel="license" href="https://creativecommons.org/licenses/by-nc-sa/4.0/deed.zh">知识共享 署名 - 非商业性 - 相同方式共享 4.0 国际协议</a></span>
+        </p>
+    </div>
+    <div class="bottom">
+        <p><span>毛靖文 &copy; 2015 - 2019</span>
+            <span>
+                
+                Power by <a href="http://hexo.io/" target="_blank">Hexo</a> Theme <a href="https://github.com/yscoder/hexo-theme-indigo" target="_blank">indigo</a>
+            </span>
+        </p>
+    </div>
+</footer>
+
+    </main>
+    <div class="mask" id="mask"></div>
+<a href="javascript:;" id="gotop" class="waves-effect waves-circle waves-light"><span class="icon icon-lg icon-chevron-up"></span></a>
+
+
+
+<div class="global-share" id="globalShare">
+    <ul class="reset share-icons">
+      <li>
+        <a class="weibo share-sns" target="_blank" href="http://service.weibo.com/share/share.php?url=https://github.com/LiHuaBai/2019/06/15/Unet/&title=《基于U-Net网络架构的语义分割》 — Vince's Blog&pic=https://github.com/LiHuaBai/img/cover0.png" data-title="微博">
+          <i class="icon icon-weibo"></i>
+        </a>
+      </li>
+      <li>
+        <a class="weixin share-sns wxFab" href="javascript:;" data-title="微信">
+          <i class="icon icon-weixin"></i>
+        </a>
+      </li>
+      <li>
+        <a class="qq share-sns" target="_blank" href="http://connect.qq.com/widget/shareqq/index.html?url=https://github.com/LiHuaBai/2019/06/15/Unet/&title=《基于U-Net网络架构的语义分割》 — Vince's Blog&source=毕业设计做了下语义分割相关的东西，主要是根据U-Net网络架构，并附加了一些残差卷积的变化。" data-title=" QQ">
+          <i class="icon icon-qq"></i>
+        </a>
+      </li>
+      <li>
+        <a class="facebook share-sns" target="_blank" href="https://www.facebook.com/sharer/sharer.php?u=https://github.com/LiHuaBai/2019/06/15/Unet/" data-title=" Facebook">
+          <i class="icon icon-facebook"></i>
+        </a>
+      </li>
+      <li>
+        <a class="twitter share-sns" target="_blank" href="https://twitter.com/intent/tweet?text=《基于U-Net网络架构的语义分割》 — Vince's Blog&url=https://github.com/LiHuaBai/2019/06/15/Unet/&via=https://github.com/LiHuaBai" data-title=" Twitter">
+          <i class="icon icon-twitter"></i>
+        </a>
+      </li>
+      <li>
+        <a class="google share-sns" target="_blank" href="https://plus.google.com/share?url=https://github.com/LiHuaBai/2019/06/15/Unet/" data-title=" Google+">
+          <i class="icon icon-google-plus"></i>
+        </a>
+      </li>
+    </ul>
+ </div>
+
+
+<div class="page-modal wx-share" id="wxShare">
+    <a class="close" href="javascript:;"><i class="icon icon-close"></i></a>
+    <p>扫一扫，分享到微信</p>
+    <img src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAMYAAADGCAAAAACs8KCBAAACLklEQVR42u3aQW6EQAxE0bn/pckBIphfZRKpuz+rKEHgx8Jx2/588HXdXOT+37+/u4c8eXTJkCFjWcb1eE1eSZ5wFwOPTYYMGecwSBBd3uOf7Jn6JWYZMmTICBMlKRPTd8mQIUPG5NE8XfKiU4YMGTK6Q+zzg3iLrTs8v3YWlyFDxoIMfjT9/5//ZL4hQ4aMpRhXePGkOSkE46hkyJCxNYMnOH7UJE03zg6WOWTIkLEpgzfaeHDpGhl51xeYDBkyjmF0DXq+YMGLxbRVJ0OGjHMY/BjZZTkebpBq+UxVhgwZizO6QrDDj9YpyJqFDBkytmO8m2TTwpGUm8G7ZMiQsSmDL1p14aajzfJ4LEOGjAMYQWMLBzEfLfDBgwwZMk5g8NKta7Glf+Up+EPmpTJkyFicwcNNV8HeHWcipAwZMjZlTMaQfPGrW+YIPoEMGTK2ZnThdgthvD2XNvhkyJAhgwwXg9bYeLMLHWJlyJCxHWNeCPJXdgscQSqXIUPGpoxu5YLcnyZo/ilvS0MZMmRszUibYhyQHobLwlGGDBmHMbqgJ8279KPEeV2GDBnLMq7w6oo2vsxB2nZxXpchQ8biDH7xcLugu38AMUyGDBnLMuYJlKfO7ugbLFvIkCFjawY/3KbjSZJS00Pyl3abDBkyjmfwpbHJoTQeIciQIUMGGC6m1OcWHh82yJAh4xxGOgzgiXIynvyTdpsMGTIWZHQrFLwcfKu4nKyAyJAhY1nGD8hON/W/K4DgAAAAAElFTkSuQmCC" alt="微信分享二维码">
+</div>
+
+
+
+
+    <script src="//cdn.bootcss.com/node-waves/0.7.4/waves.min.js"></script>
+<script>
+var BLOG = { ROOT: '/', SHARE: true, REWARD: false };
+
+
+</script>
+
+<script src="/js/main.min.js?v=1.7.2"></script>
+
+
+<div class="search-panel" id="search-panel">
+    <ul class="search-result" id="search-result"></ul>
+</div>
+<template id="search-tpl">
+<li class="item">
+    <a href="{path}" class="waves-block waves-effect">
+        <div class="title ellipsis" title="{title}">{title}</div>
+        <div class="flex-row flex-middle">
+            <div class="tags ellipsis">
+                {tags}
+            </div>
+            <time class="flex-col time">{date}</time>
+        </div>
+    </a>
+</li>
+</template>
+
+<script src="/js/search.min.js?v=1.7.2" async></script>
+
+
+
+
+
+
+<script async src="//busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script>
+
+
+
+
+
+</body>
+</html>
